@@ -10,8 +10,10 @@ class _Stage1State extends State<Stage1> {
   int stageSize = 5;//5×5
   //2.0/(stageSize-1)
 //  Alignment _red = Alignment(-1.0,-1.0);
-  var _red = [0,0];
-  static var _alignmentRed = Alignment(-1.0,-1.0);
+  var _red = [1,3];
+  var beforeRed = [0,0];
+  static var _initAlignmentRed = Alignment(1.0,-1.0);
+  static var _alignmentRed = Alignment(0.5,-0.5);
   List<List<int>> parameter;
 
   Border borderTopRight = Border(top:BorderSide(color: Colors.grey,width: 5.0),right:BorderSide(color: Colors.grey,width: 5.0));
@@ -35,9 +37,9 @@ class _Stage1State extends State<Stage1> {
       }
       list.add(listCache);
     }
-    list[1][3] = 14;
+    list[2][0] = 21;
     list[2][2] = 210;
-    print(list[0]);
+    print(list[1]);
     return  list;
   }
 
@@ -117,26 +119,71 @@ class _Stage1State extends State<Stage1> {
     }
     return _list;
   }
+  void topMove(){
+    beforeRed = [_red[0],_red[1]];
+    for(int i = 0;i < stageSize ; i++){
+      if(parameter[_red[0]][_red[1]] == null){
 
-  void rightMove(){
-    for(int i=0;i<stageSize;i++){
-      if(parameter[_red[0]][_red[1]]==null){
-
-      }else if(parameter[_red[0]][_red[1]]%5 == 0){
-
-      }else if(parameter[_red[0]][_red[1]]%7 == 0){
-        print("stop");
+      }else if(parameter[_red[0]][_red[1]] % 2 == 0){
         break;
+      }else if(parameter[_red[0]][_red[1]] % 3 == 0){
+        if(i != 0) { _red[0] += 1; break; }
+
       }
-      if(_red[1] == stageSize-1){
-        break;
-      }
-        _red[1]+= 1;
-      print(_red[1]);
+      if(_red[0] == 0)break;
+      _red[0]+= -1;
+      print("下：${parameter[_red[0]][_red[1]]}");
     }
   }
+  void bottomMove(){
+    beforeRed = [_red[0],_red[1]];
+    for(int i = 0;i < stageSize ; i++){
+      if(parameter[_red[0]][_red[1]] == null){
+
+      }else if(parameter[_red[0]][_red[1]] % 2 == 0){
+        if(i != 0) { _red[0] += -1; break; }
+      }else if(parameter[_red[0]][_red[1]] % 3 == 0){
+        break;
+      }
+      if(_red[0] == stageSize-1)break;
+      _red[0]+= 1;
+      print("下：${parameter[_red[0]][_red[1]]}");
+    }
+  }
+  void rightMove(){
+    beforeRed = [_red[0],_red[1]];
+    for(int i = 0;i < stageSize ; i++){
+      if(parameter[_red[0]][_red[1]] == null){
+
+      }else if(parameter[_red[0]][_red[1]] % 5 == 0){
+        if(i != 0) { _red[1] += -1; break; }
+      }else if(parameter[_red[0]][_red[1]] % 7 == 0){
+        break;
+      }
+      if(_red[1] == stageSize-1)break;
+      _red[1]+= 1;
+      print("migi:${parameter[_red[0]][_red[1]]}");
+    }
+  }
+  void leftMove(){
+    print(_red);
+    beforeRed = [_red[0],_red[1]];
+    for(int i = 0;i < stageSize ; i++){
+      if(parameter[_red[0]][_red[1]] == null){
+
+      }else if(parameter[_red[0]][_red[1]] % 5 == 0){
+        break;
+      }else if(parameter[_red[0]][_red[1]] % 7 == 0){
+        if(i != 0) { _red[1] += 1; break; }
+      }
+      if(_red[1] == 0)break;
+      _red[1]+= -1;
+      print("mhidari:${parameter[_red[0]][_red[1]]}");
+    }
+  }
+
   BoxBorder wallBorder(number){
-    if(number== null ){
+    if(number == null ){
       return Border();
     }else{
       if(number == 14 ){
@@ -149,6 +196,8 @@ class _Stage1State extends State<Stage1> {
         return borderBottomLeft;
       }else if(number == 210){
         return borderAll;
+      }else{
+        return Border();
       }
     }
   }
@@ -177,7 +226,6 @@ class _Stage1State extends State<Stage1> {
 
   List<Widget> autoBottom(){
     List<String> _text = ["上","下","左","右"];
-    List<dynamic> alignment =[0.0,-0.5,0.0,0.5,-0.5,0.0,0.5,0.0];
 
     List<Widget> _list = [];
     for(int i=0;i<4;i++){
@@ -187,7 +235,9 @@ class _Stage1State extends State<Stage1> {
               child: Text(_text[i]),
             ),
             onTap: (){
-              rightMove();
+              btmValue(i);
+              _alignmentRed += Alignment((_red[1]-beforeRed[1])*0.5,(_red[0]-beforeRed[0])*0.5);
+              print(_red);
               setState(() {
               });
             },
@@ -195,5 +245,16 @@ class _Stage1State extends State<Stage1> {
       );
     }
     return _list;
+  }
+  btmValue(index){
+    if(index == 0){
+      topMove();
+    }else if(index==1){
+      bottomMove();
+    }else if(index==2){
+      leftMove();
+    }else if(index==3){
+      rightMove();
+    }
   }
 }
