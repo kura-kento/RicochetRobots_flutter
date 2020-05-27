@@ -1,5 +1,9 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ricochetrobotsapp/screen/top_page.dart';
+import 'package:ricochetrobotsapp/stages/stage_2.dart';
+
 
 class Stage1 extends StatefulWidget {
   @override
@@ -13,6 +17,8 @@ class _Stage1State extends State<Stage1> {
   List<int> _red = [1,0];
   List<int> beforeRed = [0,0];
   List<List<int>> parameter;
+  Stopwatch s = Stopwatch();
+
 
   Border borderTopRight = Border(top:BorderSide(color: Colors.grey,width: 5.0),bottom:BorderSide(color: Colors.grey,width: 1.0),left:BorderSide(color: Colors.grey,width: 1.0),right:BorderSide(color: Colors.grey,width: 5.0));
   Border borderTopLeft = Border(top:BorderSide(color: Colors.grey,width: 5.0),left:BorderSide(color: Colors.grey,width: 5.0),right:BorderSide(color: Colors.grey,width: 1.0));
@@ -22,6 +28,7 @@ class _Stage1State extends State<Stage1> {
 
   @override
   void initState(){
+    s.start();
     _alignmentRed = Alignment(-1.0+2.0/(stageSize-1)*_red[1],-1.0+2.0/(stageSize-1)*_red[0]);
     parameter = parameterList();
     super.initState();
@@ -50,13 +57,12 @@ class _Stage1State extends State<Stage1> {
       appBar: AppBar(),
       body: Column(
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: iconButtons()
+          ),
           Stack(
               children: [
-                Container(
-                height: 500,
-                  width: 500,
-                  color: Colors.yellow,
-                ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(children: tiles(),),
@@ -86,8 +92,9 @@ class _Stage1State extends State<Stage1> {
                         child: Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: Container(
-                            width: (MediaQuery.of(context).size.width - 20-(4*stageSize)) / stageSize,
-                            height: (MediaQuery.of(context).size.width  - 20-(4*stageSize)) / stageSize,
+                            margin: EdgeInsets.all(5.0),
+                            width: (MediaQuery.of(context).size.width-50-20-(4*stageSize)) / stageSize,
+                            height: (MediaQuery.of(context).size.width-50-20-(4*stageSize)) / stageSize,
                             decoration: BoxDecoration(
                                 color: Colors.red,
                                 borderRadius: BorderRadius.circular(100)),
@@ -116,6 +123,7 @@ class _Stage1State extends State<Stage1> {
                   margin:EdgeInsets.all(2.0),
                   height:(MediaQuery.of(context).size.width- 20-(4*stageSize))/stageSize,
                   decoration: BoxDecoration(
+                      color: parameter[i][j] != null && parameter[i][j]%11 ==0 ? Colors.red : Colors.transparent,
                       border:  wallBorder(parameter[i][j])
                   ),
 //                  child: Text("${(j%stageSize+1)+(i*stageSize)}"),
@@ -211,7 +219,61 @@ class _Stage1State extends State<Stage1> {
     if(parameter[_red[0]][_red[1]] == null){
 
     }else if(parameter[_red[0]][_red[1]]% 11 == 0){
-      print("ゴールしました。");
+      s.stop();
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text("タイトル"),
+            content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
+            actions: <Widget>[
+              // ボタン領域
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: () => Navigator.pop(context),
+              ),
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return Stage2();
+                        },
+                      )
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
+  }
+  List<Widget>iconButtons(){
+    List _icons=[Icons.refresh,Icons.home,Icons.lightbulb_outline];
+    List _route=[Stage1(),TopPage(),TopPage()];
+    List<Widget> _cache=[];
+    for(int i = 0;i < _icons.length; i++){
+      _cache.add(
+        FlatButton.icon(
+          icon:Icon(
+              _icons[i],
+              color: Colors.black
+          ),
+          label: Text(""),
+          onPressed: (){
+            Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return _route[i];
+                  },
+                )
+            );
+          },
+        ),
+      );
+    }
+    return _cache;
   }
 }

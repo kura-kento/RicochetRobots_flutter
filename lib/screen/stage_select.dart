@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ricochetrobotsapp/stages/stage_1.dart';
+import 'package:ricochetrobotsapp/stages/stage_2.dart';
 
 class StageSelect extends StatefulWidget {
   @override
@@ -6,15 +8,19 @@ class StageSelect extends StatefulWidget {
 }
 
 class _StageSelectState extends State<StageSelect> {
-
-
+var stageName = Stage2();
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          child:Column(children: stageItems())
+    return Container(
+      color: Colors.grey,
+      child: SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Container(
+              child:Column(children: stageItems())
+            ),
+          ),
         ),
       ),
     );
@@ -30,10 +36,20 @@ class _StageSelectState extends State<StageSelect> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  color: Colors.grey[400],
-                  height:(MediaQuery.of(context).size.width)/2,
-                  child: Text("${(j%2+1)+(i*2)}"),
-                ),
+                    color: Colors.grey[400],
+                    height:(MediaQuery.of(context).size.width)/2,
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return stageName;
+                              },
+                            )
+                        );
+                      },
+                    )
+                  ),
               ),
             )
           );

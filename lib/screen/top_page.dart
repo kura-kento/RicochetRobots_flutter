@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ricochetrobotsapp/screen/stage_select.dart';
+import 'package:ricochetrobotsapp/stages/stage_2.dart';
 import 'package:ricochetrobotsapp/stages/stage_1.dart';
 
 class TopPage extends StatefulWidget {
@@ -20,8 +22,7 @@ class _TopPageState extends State<TopPage> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return Stage1();
-//                      return StageSelect();
+                      return StageSelect();
                     },
                   )
                 );
