@@ -1,16 +1,18 @@
-import 'package:intl/intl.dart';
+
+import 'dart:convert';
 
 class Stage {
 
   int _id;
   int _size;
   String _name;
-  int _parameter;
+  List<List<int>> _parameter;
+  List<List<int>> _robots;
   bool _lock;
 
-  Stage(this._size, this._name, this._parameter, this._lock);
+  Stage(this._size, this._name, this._parameter,this._robots, this._lock);
 
-  Stage.withId(this._id, this._size, this._name, this._parameter, this._lock);
+  Stage.withId(this._id, this._size, this._name, this._parameter,this._robots, this._lock);
 
   int get id => _id;
 
@@ -18,7 +20,9 @@ class Stage {
 
   String get name => _name;
 
-  int get parameter => _parameter;
+  List<List<int>> get parameter => _parameter;
+
+  List<List<int>> get robots => _robots;
 
   bool get lock => _lock;
 
@@ -31,8 +35,12 @@ class Stage {
     this._name = newName;
   }
 
-  set parameter(int newParameter) {
+  set parameter(List<List<int>> newParameter) {
     this._parameter = newParameter;
+  }
+
+  set robots(List<List<int>> newRobots) {
+    this._robots = newRobots;
   }
 
   set lock(bool newLock) {
@@ -47,18 +55,27 @@ class Stage {
     map['id'] = _id;
     map['size'] = _size;
     map['name'] = _name;
-    map['parameter'] = _parameter;
+    map['parameter'] = json.encode(_parameter);
+    map['robots'] = json.encode(_robots);
     map['lock'] = _lock.toString();
     return map;
   }
 
 // MapオブジェクトからCalendarオブジェクトを抽出する
   Stage.fromMapObject(Map<String, dynamic> map) {
-    // print(map);
+     print(map);
+  //   print(json.decode(map['parameter']).map((aaa) => aaa.cast<int>()).toList());
     this._id = map['id'];
     this._size = map['size'];
     this._name = map['name'];
-    this._parameter = map['parameter'];
+    List<List<int>> parameterList=[];
+    json.decode(map['parameter']).forEach((value) => parameterList.add(value.cast<int>()));
+    this._parameter = parameterList;
+    List<List<int>> robotsList=[];
+    json.decode(map['robots']).forEach((value) => robotsList.add(value.cast<int>()));
+    this._robots = robotsList;
     this._lock = map['lock'] == "true" ? true:false;
+
   }
+
 }

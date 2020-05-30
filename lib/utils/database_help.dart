@@ -14,6 +14,7 @@ class DatabaseHelper {
   static String colSize = 'size';
   static String colName = 'name';
   static String colParameter = 'parameter';
+  static String colRobots = 'robots';
   static String colLock = 'lock';
 
 
@@ -44,8 +45,9 @@ class DatabaseHelper {
   static void _createDb(Database db, int newVersion) async {
 
     await db.execute('CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colSize INTEGER,'
-        '$colName TEXT, $colParameter INTEGER, $colLock TEXT)');
-    await db.insert(tableName,Stage(5,"stage1",210,true).toMap());
+        '$colName TEXT, $colParameter TEXT, $colRobots TEXT, $colLock TEXT)');
+    await db.insert(tableName,Stage(5,"stage1",[[2,2,210],[3,3,231]],[[4,0],[4,1]],true).toMap());
+    await db.insert(tableName,Stage(8,"stage2",[[2,2,210],[1,1,231]],[[4,0],[4,1]],true).toMap());
   }
 
   // Fetch Operation: データベースからすべてのカレンダーオブジェクトを取得します
