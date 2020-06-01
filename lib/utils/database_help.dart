@@ -46,8 +46,18 @@ class DatabaseHelper {
 
     await db.execute('CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colSize INTEGER,'
         '$colName TEXT, $colParameter TEXT, $colRobots TEXT, $colLock TEXT)');
-    await db.insert(tableName,Stage(5,"stage1",[[2,2,210],[3,3,231]],[[4,0],[4,1]],true).toMap());
-    await db.insert(tableName,Stage(8,"stage2",[[2,2,210],[1,1,231]],[[4,0],[4,1]],true).toMap());
+    await db.insert(tableName,Stage(5,"stage1",[[2,2,210],[3,3,231],[1,3,14]],[[1,1]],false).toMap());
+    await db.insert(tableName,Stage(5,"stage1",[[1,4,770],[1,3,14]],[[1,1]],true).toMap());
+    await db.insert(tableName,Stage(5,"stage2",[[2,2,210],[3,3,231]],[[4,0],[4,1]],true).toMap());
+    await db.insert(tableName,Stage(5,"stage2",[[2,4,462]],[[4,0],[4,1]],true).toMap());
+    await db.insert(tableName,Stage(5,"stage2",[[0,3,330],[1,1,21],[4,1,7],[1,4,3],[2,3,3]],[[0,0],[0,1]],true).toMap());
+    await db.insert(tableName,Stage(5,"stage2",[[1,3,11]],[[4,0],[4,1],[4,2]],true).toMap());
+    await db.insert(tableName,Stage(5,"stage2",[[0,3,770],[1,2,21],[4,1,7]],[[4,1],[4,4]],true).toMap());
+    await db.insert(tableName,Stage(5,"stage2",[[0,2,210],[2,1,210],[4,2,1155]],[[4,0],[4,1]],true).toMap());
+    await db.insert(tableName,Stage(6,"stage3",[[2,3,77],[3,0,3],[2,2,14],[3,5,6],[5,3,7],[0,2,7]],[[3,2],[4,1]],true).toMap());
+    await db.insert(tableName,Stage(7,"stage3",[[3,4,10],[2,2,210],[1,1,231]],[[4,0],[4,1]],true).toMap());
+    await db.insert(tableName,Stage(7,"stage4",[[4,5,10],[2,2,210],[1,1,231]],[[4,0],[4,1]],true).toMap());
+
   }
 
   // Fetch Operation: データベースからすべてのカレンダーオブジェクトを取得します
@@ -101,5 +111,17 @@ class DatabaseHelper {
       stageList.add(Stage.fromMapObject(stageMapList[i]));
     }
     return stageList;
+  }
+  Future<Map<String, dynamic>> getNextStageMap(id) async {
+    List<Map<String, dynamic>> x = await this.database.rawQuery('SELECT COUNT (*) from $tableName');
+    int count = Sqflite.firstIntValue(x);
+    var result = await this.database.query(tableName,where: 'id = ? ',whereArgs: ['${id < count ? id+1:count}'], orderBy: '$colId ASC');
+    return result[0];
+  }
+//次ののデータを取得
+  Future<Stage> getNextStage(id) async {
+
+    var stageNext = await getNextStageMap(id); // Get 'Map List' from database
+    return Stage.fromMapObject(stageNext);
   }
 }

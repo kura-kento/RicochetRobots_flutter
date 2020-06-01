@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ricochetrobotsapp/models/stage.dart';
+import 'package:ricochetrobotsapp/screen/stage_select.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
-import 'package:ricochetrobotsapp/stages/stage_1.dart';
+import 'package:ricochetrobotsapp/utils/database_help.dart';
 
 
 
 class StageBuilder extends StatefulWidget {
-  StageBuilder({Key key,this.stageSize ,this.wall, this.robotList}) : super(key: key);
-
+  StageBuilder({Key key,this.id,this.stageSize ,this.wall, this.robotList}) : super(key: key);
+  final int id;
   final int stageSize;
   final List<List<int>> wall;
   final List<List<int>> robotList;
@@ -22,20 +24,20 @@ class _StageBuilderState extends State<StageBuilder> {
   //2.0/(stageSize-1)
   List<int>  after = [0,0];
   List<List<int>> parameter;
+  List<List<int>> initRobotList;
   Stopwatch s = Stopwatch();
   List<Map<String,dynamic>> robotsMap = List<Map<String,dynamic>>();
 
-  Border borderTopRight = Border(top:BorderSide(color: Colors.grey,width: 5.0),bottom:BorderSide(color: Colors.grey,width: 1.0),left:BorderSide(color: Colors.grey,width: 1.0),right:BorderSide(color: Colors.grey,width: 5.0));
-  Border borderTopLeft = Border(top:BorderSide(color: Colors.grey,width: 5.0),left:BorderSide(color: Colors.grey,width: 5.0),right:BorderSide(color: Colors.grey,width: 1.0));
-  Border borderBottomRight = Border(top:BorderSide(color: Colors.grey,width: 1.0),bottom:BorderSide(color: Colors.grey,width: 5.0),right:BorderSide(color: Colors.grey,width: 5.0),left:BorderSide(color: Colors.grey,width: 1.0));
-  Border borderBottomLeft = Border(top:BorderSide(color: Colors.grey,width: 1.0),bottom:BorderSide(color: Colors.grey,width: 5.0),left:BorderSide(color: Colors.grey,width: 5.0),right:BorderSide(color: Colors.grey,width: 1.0));
-  Border borderAll = Border.all(color: Colors.grey,width: 40.0);
+  DatabaseHelper databaseHelper = DatabaseHelper();
+  Stage nextStageData;
 
   @override
   void initState(){
+    initRobotList= widget.robotList.map((value) => [value[0],value[1]]).toList();
     s.start();
     parameter = parameterList();
     robotsListMap();
+    nextDBinstall(widget.id);
     super.initState();
   }
 
@@ -57,26 +59,32 @@ class _StageBuilderState extends State<StageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("aaa"),
-      ),
-      body: Column(
-        children: [
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: iconButtons()
-          ),
-          Stack(
+    return Container(
+      color: Colors.grey[400],
+      child: SafeArea(
+        child: Scaffold(
+          body: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(children: tiles(),),
+              Container(
+                height: 50,
+                child: Center(child: Text("ステージ${widget.id}")),
               ),
-              Stack(children: robot())
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: iconButtons()
+              ),
+              Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(children: tiles(),),
+                  ),
+                  Stack(children: robot())
+                ],
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -95,7 +103,7 @@ class _StageBuilderState extends State<StageBuilder> {
                     color: parameter[i][j] != null && parameter[i][j]%11 == 0 ? Colors.red : Colors.transparent,
                     border:  wallBorder(parameter[i][j])
                 ),
-//                  child: Text("${(j%stageSize+1)+(i*stageSize)}"),
+                  child: Text("[${i},${j}]"),
               ),
 
             )
@@ -106,8 +114,8 @@ class _StageBuilderState extends State<StageBuilder> {
     return _list;
   }
   List<Widget>iconButtons(){
-    List _icons=[Icons.refresh,Icons.home,Icons.lightbulb_outline];
-    List _route=[Stage1(),TopPage(),TopPage()];
+    List _icons = [Icons.refresh,Icons.home,Icons.apps];
+    List _route = [StageBuilder(stageSize: widget.stageSize,wall: widget.wall,robotList: initRobotList,id: widget.id),TopPage(),StageSelect()];
     List<Widget> _cache=[];
     for(int i = 0;i < _icons.length; i++){
       _cache.add(
@@ -259,6 +267,7 @@ class _StageBuilderState extends State<StageBuilder> {
 
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
       s.stop();
+      unlock();
       showDialog(
         context: context,
         builder: (_) {
@@ -277,7 +286,7 @@ class _StageBuilderState extends State<StageBuilder> {
                   Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return Stage1();
+                          return StageBuilder(id: nextStageData.id,stageSize: nextStageData.size,wall: nextStageData.parameter,robotList: nextStageData.robots,);
                         },
                       )
                   );
@@ -291,23 +300,24 @@ class _StageBuilderState extends State<StageBuilder> {
   }
 
   BoxBorder wallBorder(number){
+     double _top = 1.0;
+     double _bottom = 1.0;
+     double _left = 1.0;
+     double _right = 1.0;
     if(number == null){
-      return Border.all(color: Colors.grey,width: 1.0);
     }else{
-      if(number%210 == 0) {
-        return borderAll;
-      }else if(number%14 ==0){
-        return borderTopRight;
-      }else if(number%10 == 0){
-        return borderTopLeft;
-      }else if(number%21 == 0){
-        return borderBottomRight;
-      }else if(number%15 == 0){
-        return borderBottomLeft;
-      }else{
-        return Border();
+      if(number%2 == 0){_top = 5.0;}
+      if(number%3 == 0){_bottom = 5.0;}
+      if(number%5 == 0){_left = 5.0;}
+      if(number%7 == 0){_right = 5.0;}
+      if(number%210 == 0){
+        _top = 40.0;
+        _bottom = 40.0;
+        _left = 40.0;
+        _right = 40.0;
       }
     }
+    return Border(top:BorderSide(color: Colors.grey,width: _top),bottom:BorderSide(color: Colors.grey,width: _bottom),left:BorderSide(color: Colors.grey,width: _left),right:BorderSide(color: Colors.grey,width: _right));
   }
   void robotsListMap(){
     List<Color> colors = [Colors.red,Colors.blue,Colors.green,Colors.yellow];
@@ -316,5 +326,16 @@ class _StageBuilderState extends State<StageBuilder> {
         {"color": colors[i],"alignment":Alignment(-1.0+widget.robotList[i][1]*2.0/(widget.stageSize-1),-1.0+widget.robotList[i][0]*2.0/(widget.stageSize-1)),"robot": widget.robotList[i]}
       });
     }
+  }
+
+  Future<void> nextDBinstall(id)async{
+    nextStageData = await databaseHelper.getNextStage(id);
+    print(nextStageData.id);
+    setState(() {});
+  }
+  Future<void> unlock()async{
+    nextStageData.lock = false;
+    await databaseHelper.updateStage(nextStageData);
+    setState(() {});
   }
 }

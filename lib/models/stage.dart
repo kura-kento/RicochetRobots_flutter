@@ -63,8 +63,7 @@ class Stage {
 
 // MapオブジェクトからCalendarオブジェクトを抽出する
   Stage.fromMapObject(Map<String, dynamic> map) {
-     print(map);
-  //   print(json.decode(map['parameter']).map((aaa) => aaa.cast<int>()).toList());
+//     print(map);
     this._id = map['id'];
     this._size = map['size'];
     this._name = map['name'];
