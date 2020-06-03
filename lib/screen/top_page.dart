@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/screen/stage_select.dart';
+import 'package:ricochetrobotsapp/utils/page_animation.dart';
+import 'package:ricochetrobotsapp/utils/sounds.dart';
+
 
 class TopPage extends StatefulWidget {
   @override
@@ -7,6 +10,8 @@ class TopPage extends StatefulWidget {
 }
 
 class _TopPageState extends State<TopPage> {
+  final SoundManager soundManagerSelect = SoundManager();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,12 +22,13 @@ class _TopPageState extends State<TopPage> {
             FlatButton(
               child: Text("スタート"),
               onPressed: (){
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return StageSelect();
-                    },
-                  )
+                soundManagerSelect.playLocal('start.mp3');
+                Navigator.push(
+                  context,
+                  SlidePageRoute(
+                    page: StageSelect(),
+                    settings: RouteSettings(name: '/stage_builder',),
+                  ),
                 );
               },
             )
@@ -32,3 +38,4 @@ class _TopPageState extends State<TopPage> {
     );
   }
 }
+

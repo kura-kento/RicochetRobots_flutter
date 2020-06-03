@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
 import 'package:ricochetrobotsapp/stages/stage_builder.dart';
-import 'package:ricochetrobotsapp/stages/stage_2.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
+import 'package:ricochetrobotsapp/utils/page_animation.dart';
+import 'package:ricochetrobotsapp/utils/sounds.dart';
 
 class StageSelect extends StatefulWidget {
   @override
@@ -11,12 +13,11 @@ class StageSelect extends StatefulWidget {
 }
 
 class _StageSelectState extends State<StageSelect> {
-var stageName = Stage2();
 
+final SoundManager soundManager = SoundManager();
 DatabaseHelper databaseHelper = DatabaseHelper();
 List<Stage> stageDataList;
 int dataLength = 0;
- List<List<int>> wall = [[3,3,231],[2,2,210]];
 
 @override
 void initState(){
@@ -41,12 +42,13 @@ void initState(){
                     width: 70,
                     child: IconButton(
                       onPressed: (){
-                        Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return TopPage();
-                              },
-                            )
+                        soundManager.playLocal('select.mp3');
+                        Navigator.push(
+                          context,
+                          SlidePageRoute(
+                            page: TopPage(),
+                            settings: RouteSettings(name: '/stage_builder',),
+                          ),
                         );
                       },
                       icon: Icon(Icons.arrow_back_ios),
@@ -86,16 +88,16 @@ void initState(){
                       height: (MediaQuery.of(context).size.width) / 5,
                       child: InkWell(
                         onTap: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return StageBuilder(
-                                      id: stageDataList[stageNumber].id,
-                                      stageSize: stageDataList[stageNumber].size,
-                                      wall: stageDataList[stageNumber].parameter,
-                                      robotList: stageDataList[stageNumber].robots);
-                                },
-                              )
+                          soundManager.playLocal('select.mp3');
+                          Navigator.push(
+                            context,
+                            SlidePageRoute(
+                              page: StageBuilder(id: stageDataList[stageNumber].id,
+                                                 stageSize: stageDataList[stageNumber].size,
+                                                 wall: stageDataList[stageNumber].parameter,
+                                                 robotList: stageDataList[stageNumber].robots),
+                              settings: RouteSettings(name: '/stage_builder',),
+                             ),
                           );
                         },
                         child: Center(

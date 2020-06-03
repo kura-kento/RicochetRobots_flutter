@@ -4,6 +4,8 @@ import 'package:ricochetrobotsapp/models/stage.dart';
 import 'package:ricochetrobotsapp/screen/stage_select.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
+import 'package:ricochetrobotsapp/utils/page_animation.dart';
+import 'package:ricochetrobotsapp/utils/sounds.dart';
 
 
 
@@ -19,6 +21,7 @@ class StageBuilder extends StatefulWidget {
 
 class _StageBuilderState extends State<StageBuilder> {
 
+  final SoundManager soundManager = SoundManager();
 
   // int stageSize = 5;//5×5
   //2.0/(stageSize-1)
@@ -114,8 +117,8 @@ class _StageBuilderState extends State<StageBuilder> {
     return _list;
   }
   List<Widget>iconButtons(){
-    List _icons = [Icons.refresh,Icons.home,Icons.apps];
-    List _route = [StageBuilder(stageSize: widget.stageSize,wall: widget.wall,robotList: initRobotList,id: widget.id),TopPage(),StageSelect()];
+    List _icons = [Icons.refresh,Icons.apps,Icons.home];
+    List _route = [StageBuilder(stageSize: widget.stageSize,wall: widget.wall,robotList: initRobotList,id: widget.id),StageSelect(),TopPage()];
     List<Widget> _cache=[];
     for(int i = 0;i < _icons.length; i++){
       _cache.add(
@@ -126,12 +129,13 @@ class _StageBuilderState extends State<StageBuilder> {
           ),
           label: Text(""),
           onPressed: (){
-            Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return _route[i];
-                  },
-                )
+            soundManager.playLocal('select.mp3');
+            Navigator.push(
+              context,
+              SlidePageRoute(
+                page: _route[i],
+                settings: RouteSettings(name: '/stage_builder',),
+              ),
             );
           },
         ),
@@ -261,11 +265,13 @@ class _StageBuilderState extends State<StageBuilder> {
   }
 
   moveProcess(mapIndex){
+    soundManager.playLocal('move.mp3');
     robotsMap[mapIndex]["alignment"] = Alignment(-1.0 + after[1] * (2.0/(widget.stageSize-1)),-1.0+ after[0] * (2.0/(widget.stageSize-1)));
     setState(() {});
     if(parameter[after[0]][after[1]] == null){
 
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
+      soundManager.playLocal('goal.mp3');
       s.stop();
       unlock();
       showDialog(
@@ -283,12 +289,12 @@ class _StageBuilderState extends State<StageBuilder> {
               FlatButton(
                 child: Text("OK"),
                 onPressed: (){
-                  Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return StageBuilder(id: nextStageData.id,stageSize: nextStageData.size,wall: nextStageData.parameter,robotList: nextStageData.robots,);
-                        },
-                      )
+                  Navigator.push(
+                    context,
+                    SlidePageRoute(
+                      page: StageBuilder(id: nextStageData.id,stageSize: nextStageData.size,wall: nextStageData.parameter,robotList: nextStageData.robots,),
+                      settings: RouteSettings(name: '/stage_builder',),
+                    ),
                   );
                 },
               ),
@@ -339,3 +345,4 @@ class _StageBuilderState extends State<StageBuilder> {
     setState(() {});
   }
 }
+
