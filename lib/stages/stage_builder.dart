@@ -5,6 +5,7 @@ import 'package:ricochetrobotsapp/screen/stage_select.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
+import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
 
 
@@ -274,6 +275,7 @@ class _StageBuilderState extends State<StageBuilder> {
       soundManager.playLocal('goal.mp3');
       s.stop();
       unlock();
+      SharedPrefs.setStage(widget.id+1);
       showDialog(
         context: context,
         builder: (_) {

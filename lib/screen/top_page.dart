@@ -19,8 +19,21 @@ class _TopPageState extends State<TopPage> {
         child: Column(
           children: [
             Container(height: 400,),
-            FlatButton(
-              child: Text("スタート"),
+            IconButton(
+              icon: Icon(Icons.apps),
+              onPressed: (){
+                soundManagerSelect.playLocal('start.mp3');
+                Navigator.push(
+                  context,
+                  SlidePageRoute(
+                    page: StageSelect(),
+                    settings: RouteSettings(name: '/stage_builder',),
+                  ),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_right),
               onPressed: (){
                 soundManagerSelect.playLocal('start.mp3');
                 Navigator.push(
