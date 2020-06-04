@@ -92,10 +92,7 @@ void initState(){
                           Navigator.push(
                             context,
                             SlidePageRoute(
-                              page: StageBuilder(id: stageDataList[stageNumber].id,
-                                                 stageSize: stageDataList[stageNumber].size,
-                                                 wall: stageDataList[stageNumber].parameter,
-                                                 robotList: stageDataList[stageNumber].robots),
+                              page: StageBuilder(id: stageDataList[stageNumber].id),
                               settings: RouteSettings(name: '/stage_builder',),
                              ),
                           );

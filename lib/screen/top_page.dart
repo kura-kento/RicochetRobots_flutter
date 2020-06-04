@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/screen/stage_select.dart';
+import 'package:ricochetrobotsapp/stages/stage_builder.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
+import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
 
 
@@ -18,11 +20,29 @@ class _TopPageState extends State<TopPage> {
       body: Center(
         child: Column(
           children: [
-            Container(height: 400,),
+            Container(height: 200,),
+            Text("stage"+SharedPrefs.getStage().toString()),
+            Container(height: 50,),
             IconButton(
-              icon: Icon(Icons.apps),
+              icon: Icon(Icons.play_arrow),
+              iconSize: 40,
               onPressed: (){
                 soundManagerSelect.playLocal('start.mp3');
+                Navigator.push(
+                  context,
+                  SlidePageRoute(
+                    page: StageBuilder(id: SharedPrefs.getStage()),
+                    settings: RouteSettings(name: '/stage_builder',),
+                  ),
+                );
+              },
+            ),
+            Container(height: 25,),
+            IconButton(
+              icon: Icon(Icons.apps),
+              iconSize: 40,
+              onPressed: (){
+                soundManagerSelect.playLocal('select.mp3');
                 Navigator.push(
                   context,
                   SlidePageRoute(
@@ -32,19 +52,6 @@ class _TopPageState extends State<TopPage> {
                 );
               },
             ),
-            IconButton(
-              icon: Icon(Icons.arrow_right),
-              onPressed: (){
-                soundManagerSelect.playLocal('start.mp3');
-                Navigator.push(
-                  context,
-                  SlidePageRoute(
-                    page: StageSelect(),
-                    settings: RouteSettings(name: '/stage_builder',),
-                  ),
-                );
-              },
-            )
           ],
         ),
       )

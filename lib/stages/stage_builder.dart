@@ -11,11 +11,8 @@ import 'package:ricochetrobotsapp/utils/sounds.dart';
 
 
 class StageBuilder extends StatefulWidget {
-  StageBuilder({Key key,this.id,this.stageSize ,this.wall, this.robotList}) : super(key: key);
+  StageBuilder({Key key,this.id}) : super(key: key);
   final int id;
-  final int stageSize;
-  final List<List<int>> wall;
-  final List<List<int>> robotList;
   @override
   _StageBuilderState createState() => _StageBuilderState();
 }
@@ -26,6 +23,7 @@ class _StageBuilderState extends State<StageBuilder> {
 
   // int stageSize = 5;//5×5
   //2.0/(stageSize-1)
+  int stageSize = 10;
   List<int>  after = [0,0];
   List<List<int>> parameter;
   List<List<int>> initRobotList;
@@ -33,28 +31,25 @@ class _StageBuilderState extends State<StageBuilder> {
   List<Map<String,dynamic>> robotsMap = List<Map<String,dynamic>>();
 
   DatabaseHelper databaseHelper = DatabaseHelper();
-  Stage nextStageData;
+  Stage stageData;
 
   @override
   void initState(){
-    initRobotList= widget.robotList.map((value) => [value[0],value[1]]).toList();
+    dataInstall(widget.id);
     s.start();
-    parameter = parameterList();
-    robotsListMap();
-    nextDBinstall(widget.id);
     super.initState();
   }
 
   List parameterList(){
     List<List<int>> list =[];
-    for(int i=0;i < widget.stageSize;i++){
+    for(int i=0;i < stageSize;i++){
       List<int> listCache = [];
-      for(int j=0;j < widget.stageSize;j++){
+      for(int j=0;j < stageSize;j++){
         listCache.add(null);
       }
       list.add(listCache);
     }
-    widget.wall.forEach((value) => list[value[0]][value[1]] = value[2]);
+    stageData.parameter.forEach((value) => list[value[0]][value[1]] = value[2]);
     return  list;
   }
 
@@ -71,7 +66,7 @@ class _StageBuilderState extends State<StageBuilder> {
             children: [
               Container(
                 height: 50,
-                child: Center(child: Text("ステージ${widget.id}")),
+                child: Center(child: Text("STAGE${widget.id}")),
               ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,7 +78,8 @@ class _StageBuilderState extends State<StageBuilder> {
                     padding: const EdgeInsets.all(10.0),
                     child: Column(children: tiles(),),
                   ),
-                  Stack(children: robot())
+                  Stack(children: robot()),
+                  Text('')
                 ],
               ),
             ],
@@ -94,32 +90,40 @@ class _StageBuilderState extends State<StageBuilder> {
   }
   List<Widget> tiles(){
     List<Widget> _list = [];
-    for(int i=0; i<widget.stageSize; i++){
-      List<Widget> _listCache = [];
-      for(int j=0; j<widget.stageSize;j++){
-        _listCache.add(
-            Expanded(
-              flex: 1,
-              child: Container(
-                margin:EdgeInsets.all(2.0),
-                height:(MediaQuery.of(context).size.width- 20-(4*widget.stageSize))/widget.stageSize,
-                decoration: BoxDecoration(
-                    color: parameter[i][j] != null && parameter[i][j]%11 == 0 ? Colors.red : Colors.transparent,
-                    border:  wallBorder(parameter[i][j])
+    if(parameter!=null) {
+      for (int i = 0; i < stageSize; i++) {
+        List<Widget> _listCache = [];
+        for (int j = 0; j < stageSize; j++) {
+          _listCache.add(
+              Expanded(
+                flex: 1,
+                child: Container(
+                  margin: EdgeInsets.all(2.0),
+                  height: (MediaQuery
+                      .of(context)
+                      .size
+                      .width - 20 - (4 * stageSize)) / stageSize,
+                  decoration: BoxDecoration(
+                      color: parameter[i][j] != null &&
+                          parameter[i][j] % 11 == 0 ? Colors.red : Colors
+                          .transparent,
+                      border: wallBorder(parameter[i][j])
+                  ),
+                  child: Text("${[i,j]}"),
                 ),
-                  child: Text("[${i},${j}]"),
-              ),
 
-            )
-        );
+              )
+          );
+        }
+        _list.add(Row(children: _listCache,));
       }
-      _list.add(Row(children: _listCache,));
     }
     return _list;
+
   }
   List<Widget>iconButtons(){
     List _icons = [Icons.refresh,Icons.apps,Icons.home];
-    List _route = [StageBuilder(stageSize: widget.stageSize,wall: widget.wall,robotList: initRobotList,id: widget.id),StageSelect(),TopPage()];
+    List _route = [StageBuilder(id: widget.id),StageSelect(),TopPage()];
     List<Widget> _cache=[];
     for(int i = 0;i < _icons.length; i++){
       _cache.add(
@@ -145,7 +149,7 @@ class _StageBuilderState extends State<StageBuilder> {
     return _cache;
   }
   List<Widget> robot(){
-    List<Widget> _list = [];
+    List<Widget> _list = [Text('')];
     for(int mapIndex=0;mapIndex < robotsMap.length;mapIndex++){
       _list.add(
         GestureDetector(
@@ -174,8 +178,8 @@ class _StageBuilderState extends State<StageBuilder> {
                   padding: const EdgeInsets.all(2.0),
                   child: Container(
                     margin: EdgeInsets.all(5.0),
-                    width: (MediaQuery.of(context).size.width-50-20-(4*widget.stageSize)) / widget.stageSize,
-                    height: (MediaQuery.of(context).size.width-50-20-(4*widget.stageSize)) / widget.stageSize,
+                    width: (MediaQuery.of(context).size.width-50-20-(4*stageSize)) / stageSize,
+                    height: (MediaQuery.of(context).size.width-50-20-(4*stageSize)) / stageSize,
                     decoration: BoxDecoration(
                         color: robotsMap[mapIndex]["color"],
                         borderRadius: BorderRadius.circular(100)),
@@ -193,7 +197,7 @@ class _StageBuilderState extends State<StageBuilder> {
 
   void topMove(mapIndex){
     after = robotsMap[mapIndex]["robot"];
-    outside: for(int i = 0;i < widget.stageSize ; i++){
+    outside: for(int i = 0;i < stageSize ; i++){
       for(int index=0;index < robotsMap.length;index++){
         if(mapIndex == index){continue;}
         if(after[0] == robotsMap[index]["robot"][0] && after[1] == robotsMap[index]["robot"][1]){after[0] += 1; break outside;}
@@ -212,7 +216,7 @@ class _StageBuilderState extends State<StageBuilder> {
   }
   void bottomMove(mapIndex){
     after = robotsMap[mapIndex]["robot"];
-    outside: for(int i = 0;i < widget.stageSize ; i++){
+    outside: for(int i = 0;i < stageSize ; i++){
       for(int index=0;index < robotsMap.length;index++){
         if(mapIndex == index){continue;}
         if(after[0] == robotsMap[index]["robot"][0] && after[1] == robotsMap[index]["robot"][1]){after[0] += -1; break outside;}
@@ -224,13 +228,13 @@ class _StageBuilderState extends State<StageBuilder> {
       }else if(parameter[after[0]][after[1]] % 3 == 0){
         break;
       }
-      if(after[0] == widget.stageSize-1)break;
+      if(after[0] == stageSize-1)break;
       after[0]+= 1;
     }
   }
   void rightMove(mapIndex){
     after = robotsMap[mapIndex]["robot"];
-    outside: for(int i = 0;i < widget.stageSize ; i++){
+    outside: for(int i = 0;i < stageSize ; i++){
       for(int index=0;index < robotsMap.length;index++){
         if(mapIndex == index){continue;}
         if(after[0] == robotsMap[index]["robot"][0] && after[1] == robotsMap[index]["robot"][1]){after[1] += -1; break outside;}
@@ -242,13 +246,13 @@ class _StageBuilderState extends State<StageBuilder> {
       }else if(parameter[after[0]][after[1]] % 7 == 0){
         break;
       }
-      if(after[1] == widget.stageSize-1)break;
+      if(after[1] == stageSize-1)break;
       after[1]+= 1;
     }
   }
   void leftMove(mapIndex){
     after = robotsMap[mapIndex]["robot"];
-    outside: for(int i = 0;i < widget.stageSize ; i++){
+    outside: for(int i = 0;i < stageSize ; i++){
       for(int index=0;index < robotsMap.length;index++){
         if(mapIndex == index){continue;}
         if(after[0] == robotsMap[index]["robot"][0] && after[1] == robotsMap[index]["robot"][1]){after[1] += 1; break outside;}
@@ -267,7 +271,7 @@ class _StageBuilderState extends State<StageBuilder> {
 
   moveProcess(mapIndex){
     soundManager.playLocal('move.mp3');
-    robotsMap[mapIndex]["alignment"] = Alignment(-1.0 + after[1] * (2.0/(widget.stageSize-1)),-1.0+ after[0] * (2.0/(widget.stageSize-1)));
+    robotsMap[mapIndex]["alignment"] = Alignment(-1.0 + after[1] * (2.0/(stageSize-1)),-1.0+ after[0] * (2.0/(stageSize-1)));
     setState(() {});
     if(parameter[after[0]][after[1]] == null){
 
@@ -275,30 +279,53 @@ class _StageBuilderState extends State<StageBuilder> {
       soundManager.playLocal('goal.mp3');
       s.stop();
       unlock();
+      //変更予定
       SharedPrefs.setStage(widget.id+1);
       showDialog(
         context: context,
         builder: (_) {
           return AlertDialog(
-            title: Text("タイトル"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            ),
+           // contentPadding: EdgeInsets.only(bottom: 30.0),
+            title: Text("STAGE"+widget.id.toString()),
             content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
             actions: <Widget>[
               // ボタン領域
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: () => Navigator.pop(context),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey,width:1.0)
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.reply),
+                  iconSize: 25,
+                  color: Colors.lightBlueAccent,
+                  onPressed: (){
+                    soundManager.playLocal('select.mp3');
+                    Navigator.pop(context);
+                  },
+                ),
               ),
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    SlidePageRoute(
-                      page: StageBuilder(id: nextStageData.id,stageSize: nextStageData.size,wall: nextStageData.parameter,robotList: nextStageData.robots,),
-                      settings: RouteSettings(name: '/stage_builder',),
-                    ),
-                  );
-                },
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey,width:1.0)
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.play_arrow),
+                  iconSize: 25,
+                  color: Colors.lightBlueAccent,
+                  onPressed: (){
+                    soundManager.playLocal('select.mp3');
+                    Navigator.push(
+                      context,
+                      SlidePageRoute(
+                        page: StageBuilder(id: widget.id+1),
+                        settings: RouteSettings(name: '/stage_builder',),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           );
@@ -329,21 +356,27 @@ class _StageBuilderState extends State<StageBuilder> {
   }
   void robotsListMap(){
     List<Color> colors = [Colors.red,Colors.blue,Colors.green,Colors.yellow];
-    for(int i=0;i<widget.robotList.length;i++){
+    for(int i=0;i<stageData.robots.length;i++){
       robotsMap.addAll({
-        {"color": colors[i],"alignment":Alignment(-1.0+widget.robotList[i][1]*2.0/(widget.stageSize-1),-1.0+widget.robotList[i][0]*2.0/(widget.stageSize-1)),"robot": widget.robotList[i]}
+        {"color": colors[i],"alignment":Alignment(-1.0+stageData.robots[i][1]*2.0/(stageSize-1),-1.0+stageData.robots[i][0]*2.0/(stageSize-1)),"robot": stageData.robots[i]}
       });
     }
   }
 
-  Future<void> nextDBinstall(id)async{
-    nextStageData = await databaseHelper.getNextStage(id);
-    print(nextStageData.id);
+  Future<void> dataInstall(id)async{
+    stageData = await databaseHelper.getSingleStage(id);
+    print(stageData.robots);
+    stageSize = stageData.size;
+    initRobotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
+    parameter = parameterList();
+    robotsListMap();
     setState(() {});
   }
   Future<void> unlock()async{
-    nextStageData.lock = false;
-    await databaseHelper.updateStage(nextStageData);
+    Stage _data;
+    _data = await databaseHelper.getSingleStage(widget.id);
+    _data.lock = false;
+    await databaseHelper.updateStage(_data);
     setState(() {});
   }
 }
