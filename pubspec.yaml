@@ -37,6 +37,7 @@ dependencies:
   path_provider: ^1.6.7
   audioplayers: ^0.13.7
   shared_preferences: ^0.4.1
+  trotter: ^1.2.0
 
 dev_dependencies:
   flutter_test:

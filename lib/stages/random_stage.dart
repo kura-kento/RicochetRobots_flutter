@@ -1,34 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
-import 'package:ricochetrobotsapp/screen/stage_select.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
-import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
 import 'package:trotter/trotter.dart';
 
 
 
-class StageBuilder extends StatefulWidget {
-  StageBuilder({Key key,this.id}) : super(key: key);
+class RandomStage extends StatefulWidget {
+  RandomStage({Key key,this.id}) : super(key: key);
   final int id;
   @override
-  _StageBuilderState createState() => _StageBuilderState();
+  _RandomStageState createState() => _RandomStageState();
 }
 
-class _StageBuilderState extends State<StageBuilder> {
+class _RandomStageState extends State<RandomStage> {
 
   final SoundManager soundManager = SoundManager();
-
+  Stopwatch s = Stopwatch();
   // int stageSize = 5;//5×5
   //2.0/(stageSize-1)
   int stageSize = 10;
   List<int>  after = [0,0];
   List<List<int>> parameter;
   List<List<int>> robotList;
-  Stopwatch s = Stopwatch();
   List<Map<String,dynamic>> robotsMap = List<Map<String,dynamic>>();
 
   DatabaseHelper databaseHelper = DatabaseHelper();
@@ -117,8 +114,8 @@ class _StageBuilderState extends State<StageBuilder> {
 
   }
   List<Widget>iconButtons(){
-    List _icons = [Icons.refresh,Icons.apps,Icons.home];
-    List _route = [StageBuilder(id: widget.id),StageSelect(),TopPage()];
+    List _icons = [Icons.refresh,Icons.cached,Icons.home];
+    List _route = ["","",TopPage()];
     List<Widget> _cache=[];
     for(int i = 0;i < _icons.length; i++){
       _cache.add(
@@ -129,14 +126,21 @@ class _StageBuilderState extends State<StageBuilder> {
           ),
           label: Text(""),
           onPressed: (){
-            soundManager.playLocal('select.mp3');
-            Navigator.push(
-              context,
-              SlidePageRoute(
-                page: _route[i],
-                settings: RouteSettings(name: '/stage_builder',),
-              ),
-            );
+            if(i==1){
+              shuffle();
+            }else if(i==0){
+              initRobots();
+            }else{
+              soundManager.playLocal('select.mp3');
+              Navigator.push(
+                context,
+                SlidePageRoute(
+                  page: _route[i],
+                  settings: RouteSettings(name: '/stage_builder',),
+                ),
+              );
+            }
+
           },
         ),
       );
@@ -273,9 +277,7 @@ class _StageBuilderState extends State<StageBuilder> {
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
       soundManager.playLocal('goal.mp3');
       s.stop();
-      unlock();
       //変更予定
-      SharedPrefs.setStage(widget.id+1);
       showDialog(
         context: context,
         builder: (_) {
@@ -283,14 +285,14 @@ class _StageBuilderState extends State<StageBuilder> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(16.0)),
             ),
-           // contentPadding: EdgeInsets.only(bottom: 30.0),
+            // contentPadding: EdgeInsets.only(bottom: 30.0),
             title: Text("STAGE"+widget.id.toString()),
             content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
             actions: <Widget>[
               // ボタン領域
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey,width:1.0)
+                    border: Border.all(color: Colors.grey,width:1.0)
                 ),
                 child: IconButton(
                   icon: Icon(Icons.reply),
@@ -315,7 +317,7 @@ class _StageBuilderState extends State<StageBuilder> {
                     Navigator.push(
                       context,
                       SlidePageRoute(
-                        page: StageBuilder(id: widget.id+1),
+                        page: RandomStage(id: widget.id+1),
                         settings: RouteSettings(name: '/stage_builder',),
                       ),
                     );
@@ -330,10 +332,10 @@ class _StageBuilderState extends State<StageBuilder> {
   }
 
   BoxBorder wallBorder(number){
-     double _top = 1.0;
-     double _bottom = 1.0;
-     double _left = 1.0;
-     double _right = 1.0;
+    double _top = 1.0;
+    double _bottom = 1.0;
+    double _left = 1.0;
+    double _right = 1.0;
     if(number == null){
     }else{
       if(number%2 == 0){_top = 5.0;}
@@ -360,18 +362,59 @@ class _StageBuilderState extends State<StageBuilder> {
 
   Future<void> dataInstall(id)async{
     stageData = await databaseHelper.getSingleStage(id);
-    print(stageData.robots);
     stageSize = stageData.size;
     robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
-    parameter = parameterList();
     robotsListMap();
+    shuffle();
     setState(() {});
   }
-  Future<void> unlock()async{
-    Stage _data;
-    _data = await databaseHelper.getSingleStage(widget.id);
-    _data.lock = false;
-    await databaseHelper.updateStage(_data);
+  shuffle(){
+    parameter = parameterList();
+    List<String> a=[];
+    final bagOfItems = [1,2,3,4,5,6],
+        combos = Amalgams(2, bagOfItems);
+    for (final combo in combos()) {
+      a.add("${combo[0]}-${combo[1]}");
+    }
+    a.remove("2-1");
+    a.remove("3-1");
+    a.remove("6-1");
+    a.remove("6-2");
+    a.remove("6-4");
+    a.remove("6-5");
+    a.remove("4-6");
+    a.remove("5-6");
+    a.remove("1-6");
+    a.remove("2-6");
+    a.remove("1-3");
+    a.remove("1-4");
+    //をparameterにいれる。
+    List<int> wallInt = [10,14,15,21];
+    var b;
+    for(int i=0;i < 8;i++){
+      a.shuffle();
+      wallInt.shuffle();
+      b = a[0].split("-");
+      if(i==0){
+        parameter[int.parse(b[0])][int.parse(b[1])] = wallInt[0]*11;
+      }else{
+        parameter[int.parse(b[0])][int.parse(b[1])] = wallInt[0];
+      }
+      for(int first=0;first < 3;first++){
+        for(int last=0;last < 3;last++){
+          a.remove("${int.parse(b[0])+first-1}"+"-"+"${int.parse(b[1])+last-1}");
+        }
+      }
+      if(a.length == 0){break;}
+    }
+    print(a.length);
+    setState(() {});
+  }
+  Future<void> initRobots()async{
+    stageData = await databaseHelper.getSingleStage(24);
+    robotsMap = List<Map<String,dynamic>>();
+    robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
+    robotsListMap();
     setState(() {});
   }
 }
