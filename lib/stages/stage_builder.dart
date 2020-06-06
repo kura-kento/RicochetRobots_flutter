@@ -54,9 +54,6 @@ class _StageBuilderState extends State<StageBuilder> {
     return  list;
   }
 
-//  AlignmentGeometry get _alignment => robotsMap[0]["alignment"];
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,10 +73,14 @@ class _StageBuilderState extends State<StageBuilder> {
               Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: Column(children: tiles(),),
                   ),
-                  Stack(children: robot()),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Stack(children: robot()),
+                  ),
+
                   Text('')
                 ],
               ),
@@ -96,18 +97,16 @@ class _StageBuilderState extends State<StageBuilder> {
         List<Widget> _listCache = [];
         for (int j = 0; j < stageSize; j++) {
           _listCache.add(
-              Expanded(
-                flex: 1,
-                child: Container(
+            Container(
                   margin: EdgeInsets.all(2.0),
-                  height: (MediaQuery.of(context).size.width - 20 - (4 * stageSize)) / stageSize,
+                  height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+                  width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
                   decoration: BoxDecoration(
                       color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Colors.red : Colors.transparent,
                       border: wallBorder(parameter[i][j])
                   ),
                   child: Text(""),
                 ),
-              )
           );
         }
         _list.add(Row(children: _listCache,));
@@ -162,26 +161,21 @@ class _StageBuilderState extends State<StageBuilder> {
               moveProcess(mapIndex);
             }
           },
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Container(
-              height: (MediaQuery.of(context).size.width - 20),
-              child: AnimatedAlign(
-                alignment: robotsMap[mapIndex]["alignment"],
-                duration: Duration(milliseconds: 500),
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Container(
-                    margin: EdgeInsets.all(5.0),
-                    width: (MediaQuery.of(context).size.width-50-20-(4*stageSize)) / stageSize,
-                    height: (MediaQuery.of(context).size.width-50-20-(4*stageSize)) / stageSize,
-                    decoration: BoxDecoration(
-                        color: robotsMap[mapIndex]["color"],
-                        borderRadius: BorderRadius.circular(100)),
-                  ),
-                ),
-                curve: Curves.easeInOut,
+          child: Container(
+            height: (MediaQuery.of(context).size.width - 10),
+            width: (MediaQuery.of(context).size.width - 10),
+            child: AnimatedAlign(
+              alignment: robotsMap[mapIndex]["alignment"],
+              duration: Duration(milliseconds: 500),
+              child: Container(
+                margin: EdgeInsets.all(2.0+25.0/stageSize),
+                width: (MediaQuery.of(context).size.width-50-10-(4*stageSize)) / stageSize,
+                height: (MediaQuery.of(context).size.width-50-10-(4*stageSize)) / stageSize,
+                decoration: BoxDecoration(
+                    color: robotsMap[mapIndex]["color"],
+                    borderRadius: BorderRadius.circular(100)),
               ),
+              curve: Curves.easeInOut,
             ),
           ),
         ),
