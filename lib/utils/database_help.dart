@@ -46,7 +46,7 @@ class DatabaseHelper {
 
     await db.execute('CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colSize INTEGER,'
         '$colName TEXT, $colParameter TEXT, $colRobots TEXT, $colLock TEXT)');
-    await db.insert(tableName,Stage(5,"stage1lv1",[[1,4,770],[1,3,2]],[[1,1]],false).toMap());
+    await db.insert(tableName,Stage(5,"stage1lv1",[[1,4,11],[1,3,7],[0,4,3],[0,3,3]],[[1,1]],false).toMap());
     await db.insert(tableName,Stage(5,"stage1lv1",[[2,2,210],[3,3,231],[1,3,14]],[[1,1]],false).toMap());
     await db.insert(tableName,Stage(5,"stage2lv5",[[2,2,210],[3,3,231]],[[4,0],[4,1]],false).toMap());
     await db.insert(tableName,Stage(5,"stage2lv10",[[2,2,210],[4,0,2],[3,3,231],[4,1,7],[1,1,10]],[[1,4],[4,0]],false).toMap());

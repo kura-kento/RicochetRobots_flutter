@@ -73,7 +73,7 @@ class _StageBuilderState extends State<StageBuilder> {
               Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(5.0),
+                    padding: const EdgeInsets.all(3.0),
                     child: Column(children: tiles(),),
                   ),
                   Padding(
@@ -91,30 +91,91 @@ class _StageBuilderState extends State<StageBuilder> {
     );
   }
   List<Widget> tiles(){
-    List<Widget> _list = [];
+    List<Widget> _list = [Container(height: 4.0, width: (MediaQuery.of(context).size.width), color: Colors.white,)];
     if(parameter!=null) {
       for (int i = 0; i < stageSize; i++) {
-        List<Widget> _listCache = [];
+        List<Widget> a = [Container(height: 4.0, width: 4.0, color: Colors.white,)];
+        List<Widget> _listCache = [Container(height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize, width: 4.0, color: Colors.white,)];
         for (int j = 0; j < stageSize; j++) {
           _listCache.add(
-            Container(
-                  margin: EdgeInsets.all(2.0),
+                Container(
+                      height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+                      width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+                      decoration: BoxDecoration(
+                          color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Colors.red : parameter[i][j] != null && parameter[i][j] % 210 == 0 ? Colors.grey: Colors.transparent,
+                          border: Border.all(color: Colors.grey,width: 1.0)
+                      ),
+                      child: Text(""),
+                    ),
+          );
+          _listCache.add(
+              Container(
                   height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                  width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                  decoration: BoxDecoration(
-                      color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Colors.red : Colors.transparent,
-                      border: wallBorder(parameter[i][j])
-                  ),
-                  child: Text(""),
-                ),
+                  width: 4.0,
+                  color: wallColor(i,j)
+              )
           );
         }
         _list.add(Row(children: _listCache,));
+        for (int j = 0; j < stageSize; j++) {
+          a.add(
+              Container(
+                  width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+                  height: 4.0,
+                  color: wallColor2(i,j)
+              )
+          );
+          a.add(
+              Container(
+                height: 4.0,
+                width: 4.0,
+                color: Colors.white,
+              )
+          );
+        }
+        _list.add(Row(children: a,));
       }
     }
     return _list;
 
   }
+  Color wallColor(i,j){
+    if(j == stageSize-1 ){
+      return Colors.white;
+    }else if(parameter[i][j] != null ){
+      if(parameter[i][j] % 7 == 0 && parameter[i][j] % 210 != 0){
+        return Colors.grey;
+      }else{
+        return Colors.white;
+      }
+    }else if(j+1 < stageSize && parameter[i][j+1] != null){
+      if(parameter[i][j+1] % 5 == 0 && parameter[i][j+1] % 210 != 0){
+        return Colors.grey;
+      }
+    }else{
+      return Colors.white;
+    }
+
+  }
+  Color wallColor2(i,j){
+    if(i == stageSize-1 ){
+      return Colors.white;
+    }else if(parameter[i][j] != null ){
+      if(parameter[i][j] % 3 == 0 && parameter[i][j] % 210 != 0){
+        return Colors.grey;
+      }else{
+        return Colors.white;
+      }
+    }else if(i+1 < stageSize && parameter[i+1][j] != null){
+        if(parameter[i+1][j] % 2 == 0 && parameter[i+1][j] % 210 != 0){
+          return Colors.grey;
+        }
+    }else{
+      return Colors.white;
+    }
+
+  }
+
   List<Widget>iconButtons(){
     List _icons = [Icons.refresh,Icons.apps,Icons.home];
     List _route = [StageBuilder(id: widget.id),StageSelect(),TopPage()];
