@@ -119,11 +119,11 @@ class _StageBuilderState extends State<StageBuilder> {
         _list.add(Row(children: _listCache,));
         for (int j = 0; j < stageSize; j++) {
           a.add(
-              Container(
-                  width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                  height: 4.0,
-                  color: wallColor2(i,j)
-              )
+            Container(
+                width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+                height: 4.0,
+                color: wallColor2(i,j)
+            )
           );
           a.add(
               Container(
@@ -142,38 +142,36 @@ class _StageBuilderState extends State<StageBuilder> {
   Color wallColor(i,j){
     if(j == stageSize-1 ){
       return Colors.white;
-    }else if(parameter[i][j] != null ){
+    }
+    if(parameter[i][j] == null ){
+    }else{
       if(parameter[i][j] % 7 == 0 && parameter[i][j] % 210 != 0){
         return Colors.grey;
-      }else{
-        return Colors.white;
       }
-    }else if(j+1 < stageSize && parameter[i][j+1] != null){
+    }
+    if(j+1 < stageSize && parameter[i][j+1] != null){
       if(parameter[i][j+1] % 5 == 0 && parameter[i][j+1] % 210 != 0){
         return Colors.grey;
       }
-    }else{
-      return Colors.white;
     }
-
+    return Colors.white;
   }
   Color wallColor2(i,j){
     if(i == stageSize-1 ){
       return Colors.white;
-    }else if(parameter[i][j] != null ){
+    }
+    if(parameter[i][j] == null ){
+    }else{
       if(parameter[i][j] % 3 == 0 && parameter[i][j] % 210 != 0){
         return Colors.grey;
-      }else{
-        return Colors.white;
       }
-    }else if(i+1 < stageSize && parameter[i+1][j] != null){
-        if(parameter[i+1][j] % 2 == 0 && parameter[i+1][j] % 210 != 0){
-          return Colors.grey;
-        }
-    }else{
-      return Colors.white;
     }
-
+    if(i+1 < stageSize && parameter[i+1][j] != null){
+      if(parameter[i+1][j] % 2 == 0 && parameter[i+1][j] % 210 != 0){
+        return Colors.grey;
+      }
+    }
+    return Colors.white;
   }
 
   List<Widget>iconButtons(){

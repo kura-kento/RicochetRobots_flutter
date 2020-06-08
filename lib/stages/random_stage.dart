@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
@@ -19,6 +21,7 @@ class RandomStage extends StatefulWidget {
 class _RandomStageState extends State<RandomStage> {
 
   final SoundManager soundManager = SoundManager();
+  int stageCount = 1;
   Stopwatch s = Stopwatch();
   // int stageSize = 5;//5×5
   //2.0/(stageSize-1)
@@ -64,7 +67,7 @@ class _RandomStageState extends State<RandomStage> {
             children: [
               Container(
                 height: 50,
-                child: Center(child: Text("STAGE${widget.id}")),
+                child: Center(child: Text("TIME ${s.elapsed.toString().substring(2, 11)}")),
               ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,7 +76,7 @@ class _RandomStageState extends State<RandomStage> {
               Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(5.0),
+                    padding: const EdgeInsets.all(3.0),
                     child: Column(children: tiles(),),
                   ),
                   Padding(
@@ -90,25 +93,49 @@ class _RandomStageState extends State<RandomStage> {
     );
   }
   List<Widget> tiles(){
-    List<Widget> _list = [];
+    List<Widget> _list = [Container(height: 4.0, width: (MediaQuery.of(context).size.width), color: Colors.white,)];
     if(parameter!=null) {
       for (int i = 0; i < stageSize; i++) {
-        List<Widget> _listCache = [];
+        List<Widget> a = [Container(height: 4.0, width: 4.0, color: Colors.white,)];
+        List<Widget> _listCache = [Container(height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize, width: 4.0, color: Colors.white,)];
         for (int j = 0; j < stageSize; j++) {
           _listCache.add(
-              Container(
-                margin: EdgeInsets.all(2.0),
-                height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                decoration: BoxDecoration(
-                    color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Colors.red : Colors.transparent,
-                    border: wallBorder(parameter[i][j])
-                ),
-                child: Text(""),
+            Container(
+              height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+              width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+              decoration: BoxDecoration(
+                  color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Colors.red : parameter[i][j] != null && parameter[i][j] % 210 == 0 ? Colors.grey: Colors.transparent,
+                  border: Border.all(color: Colors.grey,width: 1.0)
               ),
+              child: Text(""),
+            ),
+          );
+          _listCache.add(
+              Container(
+                  height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+                  width: 4.0,
+                  color: wallColor(i,j)
+              )
           );
         }
         _list.add(Row(children: _listCache,));
+        for (int j = 0; j < stageSize; j++) {
+          a.add(
+              Container(
+                  width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+                  height: 4.0,
+                  color: wallColor2(i,j)
+              )
+          );
+          a.add(
+              Container(
+                height: 4.0,
+                width: 4.0,
+                color: Colors.white,
+              )
+          );
+        }
+        _list.add(Row(children: a,));
       }
     }
     return _list;
@@ -129,6 +156,7 @@ class _RandomStageState extends State<RandomStage> {
           onPressed: (){
             if(i==1){
               shuffle();
+              initRobots();
             }else if(i==0){
               initRobots();
             }else{
@@ -188,6 +216,41 @@ class _RandomStageState extends State<RandomStage> {
       );
     }
     return _list;
+  }
+
+  Color wallColor(i,j){
+    if(j == stageSize-1 ){
+      return Colors.white;
+    }
+    if(parameter[i][j] == null ){
+    }else{
+      if(parameter[i][j] % 7 == 0 && parameter[i][j] % 210 != 0){
+        return Colors.grey;
+      }
+    }
+    if(j+1 < stageSize && parameter[i][j+1] != null){
+      if(parameter[i][j+1] % 5 == 0 && parameter[i][j+1] % 210 != 0){
+        return Colors.grey;
+      }
+    }
+    return Colors.white;
+  }
+  Color wallColor2(i,j){
+    if(i == stageSize-1 ){
+      return Colors.white;
+    }
+    if(parameter[i][j] == null ){
+    }else{
+      if(parameter[i][j] % 3 == 0 && parameter[i][j] % 210 != 0){
+        return Colors.grey;
+      }
+    }
+    if(i+1 < stageSize && parameter[i+1][j] != null){
+      if(parameter[i+1][j] % 2 == 0 && parameter[i+1][j] % 210 != 0){
+        return Colors.grey;
+      }
+    }
+    return Colors.white;
   }
 
   void topMove(mapIndex){
@@ -272,58 +335,64 @@ class _RandomStageState extends State<RandomStage> {
 
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
       soundManager.playLocal('goal.mp3');
-      s.stop();
-      //変更予定
-      showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
-            ),
-            // contentPadding: EdgeInsets.only(bottom: 30.0),
-            title: Text("STAGE"+widget.id.toString()),
-            content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
-            actions: <Widget>[
-              // ボタン領域
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey,width:1.0)
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.reply),
-                  iconSize: 25,
-                  color: Colors.lightBlueAccent,
-                  onPressed: (){
-                    soundManager.playLocal('select.mp3');
-                    Navigator.pop(context);
-                  },
-                ),
+      if(stageCount == 10){
+        s.stop();
+        //変更予定
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16.0)),
               ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey,width:1.0)
+              // contentPadding: EdgeInsets.only(bottom: 30.0),
+              title: Text("STAGE"+widget.id.toString()),
+              content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
+              actions: <Widget>[
+                // ボタン領域
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey,width:1.0)
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.reply),
+                    iconSize: 25,
+                    color: Colors.lightBlueAccent,
+                    onPressed: (){
+                      soundManager.playLocal('select.mp3');
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-                child: IconButton(
-                  icon: Icon(Icons.play_arrow),
-                  iconSize: 25,
-                  color: Colors.lightBlueAccent,
-                  onPressed: (){
-                    soundManager.playLocal('select.mp3');
-                    Navigator.push(
-                      context,
-                      SlidePageRoute(
-                        page: RandomStage(id: widget.id+1),
-                        settings: RouteSettings(name: '/stage_builder',),
-                      ),
-                    );
-                  },
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey,width:1.0)
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.play_arrow),
+                    iconSize: 25,
+                    color: Colors.lightBlueAccent,
+                    onPressed: (){
+                      soundManager.playLocal('select.mp3');
+                      Navigator.push(
+                        context,
+                        SlidePageRoute(
+                          page: RandomStage(id: widget.id+1),
+                          settings: RouteSettings(name: '/stage_builder',),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
-      );
+              ],
+            );
+          },
+        );
+      }else{
+        stageCount++;
+        shuffle();
+        initRobots();
+      }
     }
   }
 
@@ -413,5 +482,6 @@ class _RandomStageState extends State<RandomStage> {
     robotsListMap();
     setState(() {});
   }
+
 }
 
