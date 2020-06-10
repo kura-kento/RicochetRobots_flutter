@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ricochetrobotsapp/models/ranking.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
+import 'package:ricochetrobotsapp/utils/database_help_ranking.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
+import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
 import 'package:trotter/trotter.dart';
 
@@ -32,7 +35,9 @@ class _RandomStageState extends State<RandomStage> {
   List<Map<String,dynamic>> robotsMap = List<Map<String,dynamic>>();
 
   DatabaseHelper databaseHelper = DatabaseHelper();
+  DatabaseHelperRanking databaseHelperRanking = DatabaseHelperRanking();
   Stage stageData;
+  Color wallColors = Color(0xff888888);
 
   @override
   void initState(){
@@ -93,20 +98,17 @@ class _RandomStageState extends State<RandomStage> {
     );
   }
   List<Widget> tiles(){
-    List<Widget> _list = [Container(height: 4.0, width: (MediaQuery.of(context).size.width), color: Colors.white,)];
+    List<Widget> _list = [];
     if(parameter!=null) {
       for (int i = 0; i < stageSize; i++) {
         List<Widget> a = [Container(height: 4.0, width: 4.0, color: Colors.white,)];
-        List<Widget> _listCache = [Container(height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize, width: 4.0, color: Colors.white,)];
+        List<Widget> _listCache = [Container(height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize, width: 4.0, color: wallColors,)];
         for (int j = 0; j < stageSize; j++) {
           _listCache.add(
             Container(
               height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
               width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-              decoration: BoxDecoration(
-                  color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Colors.red : parameter[i][j] != null && parameter[i][j] % 210 == 0 ? Colors.grey: Colors.transparent,
-                  border: Border.all(color: Colors.grey,width: 1.0)
-              ),
+              color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Color(0xfff07783) : parameter[i][j] != null && parameter[i][j] % 210 == 0 ? wallColors: Colors.grey[300],
               child: Text(""),
             ),
           );
@@ -134,6 +136,9 @@ class _RandomStageState extends State<RandomStage> {
                 color: Colors.white,
               )
           );
+        }
+        if(i==stageSize-1){
+          _list.insert(0,Row(children: a,));
         }
         _list.add(Row(children: a,));
       }
@@ -220,34 +225,34 @@ class _RandomStageState extends State<RandomStage> {
 
   Color wallColor(i,j){
     if(j == stageSize-1 ){
-      return Colors.white;
+      return wallColors;
     }
     if(parameter[i][j] == null ){
     }else{
       if(parameter[i][j] % 7 == 0 && parameter[i][j] % 210 != 0){
-        return Colors.grey;
+        return wallColors;
       }
     }
     if(j+1 < stageSize && parameter[i][j+1] != null){
       if(parameter[i][j+1] % 5 == 0 && parameter[i][j+1] % 210 != 0){
-        return Colors.grey;
+        return wallColors;
       }
     }
     return Colors.white;
   }
   Color wallColor2(i,j){
     if(i == stageSize-1 ){
-      return Colors.white;
+      return wallColors;
     }
     if(parameter[i][j] == null ){
     }else{
       if(parameter[i][j] % 3 == 0 && parameter[i][j] % 210 != 0){
-        return Colors.grey;
+        return wallColors;
       }
     }
     if(i+1 < stageSize && parameter[i+1][j] != null){
       if(parameter[i+1][j] % 2 == 0 && parameter[i+1][j] % 210 != 0){
-        return Colors.grey;
+        return wallColors;
       }
     }
     return Colors.white;
@@ -268,7 +273,6 @@ class _RandomStageState extends State<RandomStage> {
         break;
       }
       if(after[0] == 0)break;
-      print(after);
       after[0]+= -1;
     }
   }
@@ -335,8 +339,9 @@ class _RandomStageState extends State<RandomStage> {
 
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
       soundManager.playLocal('goal.mp3');
-      if(stageCount == 10){
+      if(stageCount == 1){
         s.stop();
+        rankingSet();
         //変更予定
         showDialog(
           context: context,
@@ -395,29 +400,8 @@ class _RandomStageState extends State<RandomStage> {
       }
     }
   }
-
-  BoxBorder wallBorder(number){
-    double _top = 1.0;
-    double _bottom = 1.0;
-    double _left = 1.0;
-    double _right = 1.0;
-    if(number == null){
-    }else{
-      if(number%2 == 0){_top = 5.0;}
-      if(number%3 == 0){_bottom = 5.0;}
-      if(number%5 == 0){_left = 5.0;}
-      if(number%7 == 0){_right = 5.0;}
-      if(number%210 == 0){
-        _top = 40.0;
-        _bottom = 40.0;
-        _left = 40.0;
-        _right = 40.0;
-      }
-    }
-    return Border(top:BorderSide(color: Colors.grey,width: _top),bottom:BorderSide(color: Colors.grey,width: _bottom),left:BorderSide(color: Colors.grey,width: _left),right:BorderSide(color: Colors.grey,width: _right));
-  }
   void robotsListMap(){
-    List<Color> colors = [Colors.red,Colors.blue,Colors.green,Colors.yellow];
+    List<Color> colors = [Color(0xfff07783),Color(0xff9bb7e2),Color(0xffB3DC86),Color(0xffFFD877)];
     for(int i=0;i<stageData.robots.length;i++){
       robotsMap.addAll({
         {"color": colors[i],"alignment":Alignment(-1.0+stageData.robots[i][1]*2.0/(stageSize-1),-1.0+stageData.robots[i][0]*2.0/(stageSize-1)),"robot": stageData.robots[i]}
@@ -472,7 +456,6 @@ class _RandomStageState extends State<RandomStage> {
       }
       if(a.length == 0){break;}
     }
-    print(a.length);
     setState(() {});
   }
   Future<void> initRobots()async{
@@ -482,6 +465,8 @@ class _RandomStageState extends State<RandomStage> {
     robotsListMap();
     setState(() {});
   }
-
+  Future<void> rankingSet()async{
+    await databaseHelperRanking.insertRanking(Ranking(SharedPrefs.getName(),s.elapsedMilliseconds));
+  }
 }
 

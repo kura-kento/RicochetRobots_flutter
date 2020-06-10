@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/screen/stage_select.dart';
-import 'package:ricochetrobotsapp/stages/random_stage.dart';
+import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
 import 'package:ricochetrobotsapp/stages/stage_builder.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
 import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
@@ -61,7 +61,7 @@ class _TopPageState extends State<TopPage> {
                 Navigator.push(
                   context,
                   SlidePageRoute(
-                    page: RandomStage(id: 24,),
+                    page: TimeAttackTop(),
                     settings: RouteSettings(),
                   ),
                 );

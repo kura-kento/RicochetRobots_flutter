@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
+import 'package:ricochetrobotsapp/utils/database_help_ranking.dart';
 import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
 
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
 //    final SoundManager bgmManager = SoundManager();
 //    bgmManager.playLocal('Blue_Moon_2.mp3');
     DatabaseHelper.db = await DatabaseHelper.initializeDatabase();
+    DatabaseHelperRanking.db = await DatabaseHelperRanking.initializeDatabase();
     return TopPage();
   }
 }

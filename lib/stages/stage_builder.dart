@@ -33,7 +33,7 @@ class _StageBuilderState extends State<StageBuilder> {
 
   DatabaseHelper databaseHelper = DatabaseHelper();
   Stage stageData;
-
+  Color wallColors = Color(0xff888888);
   @override
   void initState(){
     dataInstall(widget.id);
@@ -60,51 +60,50 @@ class _StageBuilderState extends State<StageBuilder> {
       color: Colors.grey[400],
       child: SafeArea(
         child: Scaffold(
-          body: Column(
-            children: [
-              Container(
-                height: 50,
-                child: Center(child: Text("STAGE${widget.id}")),
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: iconButtons()
-              ),
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Column(children: tiles(),),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Stack(children: robot()),
-                  ),
+          body: Container(
+            child: Column(
+              children: [
+                Container(
+                  height: 50,
+                  child: Center(child: Text("STAGE${widget.id}")),
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: iconButtons()
+                ),
+                Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Column(children: tiles(),),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Stack(children: robot()),
+                    ),
 
-                  Text('')
-                ],
-              ),
-            ],
+                    Text('')
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
   List<Widget> tiles(){
-    List<Widget> _list = [Container(height: 4.0, width: (MediaQuery.of(context).size.width), color: Colors.white,)];
+    List<Widget> _list = [];
     if(parameter!=null) {
       for (int i = 0; i < stageSize; i++) {
         List<Widget> a = [Container(height: 4.0, width: 4.0, color: Colors.white,)];
-        List<Widget> _listCache = [Container(height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize, width: 4.0, color: Colors.white,)];
+        List<Widget> _listCache = [Container(height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize, width: 4.0, color: wallColors,)];
         for (int j = 0; j < stageSize; j++) {
           _listCache.add(
                 Container(
                       height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
                       width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                      decoration: BoxDecoration(
-                          color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Colors.red : parameter[i][j] != null && parameter[i][j] % 210 == 0 ? Colors.grey: Colors.transparent,
-                          border: Border.all(color: Colors.grey,width: 1.0)
-                      ),
+                      color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Color(0xfff07783): parameter[i][j] != null && parameter[i][j] % 210 == 0 ? wallColors: Colors.grey[300],
                       child: Text(""),
                     ),
           );
@@ -133,6 +132,9 @@ class _StageBuilderState extends State<StageBuilder> {
               )
           );
         }
+        if(i==stageSize-1){
+          _list.insert(0,Row(children: a,));
+        }
         _list.add(Row(children: a,));
       }
     }
@@ -141,34 +143,34 @@ class _StageBuilderState extends State<StageBuilder> {
   }
   Color wallColor(i,j){
     if(j == stageSize-1 ){
-      return Colors.white;
+      return wallColors;
     }
     if(parameter[i][j] == null ){
     }else{
       if(parameter[i][j] % 7 == 0 && parameter[i][j] % 210 != 0){
-        return Colors.grey;
+        return wallColors;
       }
     }
     if(j+1 < stageSize && parameter[i][j+1] != null){
       if(parameter[i][j+1] % 5 == 0 && parameter[i][j+1] % 210 != 0){
-        return Colors.grey;
+        return wallColors;
       }
     }
     return Colors.white;
   }
   Color wallColor2(i,j){
     if(i == stageSize-1 ){
-      return Colors.white;
+      return wallColors;
     }
     if(parameter[i][j] == null ){
     }else{
       if(parameter[i][j] % 3 == 0 && parameter[i][j] % 210 != 0){
-        return Colors.grey;
+        return wallColors;
       }
     }
     if(i+1 < stageSize && parameter[i+1][j] != null){
       if(parameter[i+1][j] % 2 == 0 && parameter[i+1][j] % 210 != 0){
-        return Colors.grey;
+        return wallColors;
       }
     }
     return Colors.white;
@@ -180,12 +182,11 @@ class _StageBuilderState extends State<StageBuilder> {
     List<Widget> _cache=[];
     for(int i = 0;i < _icons.length; i++){
       _cache.add(
-        FlatButton.icon(
+        IconButton(
           icon:Icon(
               _icons[i],
               color: Colors.black
           ),
-          label: Text(""),
           onPressed: (){
             soundManager.playLocal('select.mp3');
             Navigator.push(
@@ -258,7 +259,6 @@ class _StageBuilderState extends State<StageBuilder> {
         break;
       }
       if(after[0] == 0)break;
-      print(after);
       after[0]+= -1;
     }
   }
@@ -382,28 +382,8 @@ class _StageBuilderState extends State<StageBuilder> {
     }
   }
 
-  BoxBorder wallBorder(number){
-     double _top = 1.0;
-     double _bottom = 1.0;
-     double _left = 1.0;
-     double _right = 1.0;
-    if(number == null){
-    }else{
-      if(number%2 == 0){_top = 5.0;}
-      if(number%3 == 0){_bottom = 5.0;}
-      if(number%5 == 0){_left = 5.0;}
-      if(number%7 == 0){_right = 5.0;}
-      if(number%210 == 0){
-        _top = 40.0;
-        _bottom = 40.0;
-        _left = 40.0;
-        _right = 40.0;
-      }
-    }
-    return Border(top:BorderSide(color: Colors.grey,width: _top),bottom:BorderSide(color: Colors.grey,width: _bottom),left:BorderSide(color: Colors.grey,width: _left),right:BorderSide(color: Colors.grey,width: _right));
-  }
   void robotsListMap(){
-    List<Color> colors = [Colors.red,Colors.blue,Colors.green,Colors.yellow];
+    List<Color> colors = [Color(0xfff07783),Color(0xff9bb7e2),Color(0xffB3DC86),Color(0xffFFD877)];
     for(int i=0;i<stageData.robots.length;i++){
       robotsMap.addAll({
         {"color": colors[i],"alignment":Alignment(-1.0+stageData.robots[i][1]*2.0/(stageSize-1),-1.0+stageData.robots[i][0]*2.0/(stageSize-1)),"robot": stageData.robots[i]}
@@ -413,7 +393,6 @@ class _StageBuilderState extends State<StageBuilder> {
 
   Future<void> dataInstall(id)async{
     stageData = await databaseHelper.getSingleStage(id);
-    print(stageData.robots);
     stageSize = stageData.size;
     robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
     parameter = parameterList();

@@ -51,7 +51,7 @@ void initState(){
                           ),
                         );
                       },
-                      icon: Icon(Icons.arrow_back_ios),
+                      icon: Icon(Icons.reply),
                     ),
                   ),
                 ],
@@ -88,7 +88,7 @@ void initState(){
                       height: (MediaQuery.of(context).size.width) / 5,
                       child: InkWell(
                         onTap: () {
-                          soundManager.playLocal('select.mp3');
+                          soundManager.playLocal('start.mp3');
                           Navigator.push(
                             context,
                             SlidePageRoute(
