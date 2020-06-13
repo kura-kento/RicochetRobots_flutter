@@ -104,7 +104,8 @@ class _StageBuilderState extends State<StageBuilder> {
                       height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
                       width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
                       color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Color(0xfff07783): parameter[i][j] != null && parameter[i][j] % 210 == 0 ? wallColors: Colors.grey[300],
-                      child: Text(""),
+                      //child: Text("${[i,j]}"),
+                      child: Text("${[i,j]}"),
                     ),
           );
           _listCache.add(
@@ -383,7 +384,7 @@ class _StageBuilderState extends State<StageBuilder> {
   }
 
   void robotsListMap(){
-    List<Color> colors = [Color(0xfff07783),Color(0xff9bb7e2),Color(0xffB3DC86),Color(0xffFFD877)];
+    List<Color> colors = [Color(0xfff07783),Color(0xff75A9FF),Color(0xffB3DC86),Color(0xffFFD877)];
     for(int i=0;i<stageData.robots.length;i++){
       robotsMap.addAll({
         {"color": colors[i],"alignment":Alignment(-1.0+stageData.robots[i][1]*2.0/(stageSize-1),-1.0+stageData.robots[i][0]*2.0/(stageSize-1)),"robot": stageData.robots[i]}

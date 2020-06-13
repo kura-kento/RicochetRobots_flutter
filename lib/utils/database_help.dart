@@ -68,12 +68,13 @@ class DatabaseHelper {
     await db.insert(tableName,Stage(6,"stage3lv60",[[2,2,154],[0,0,7],[0,2,7],[3,4,14],[4,2,10],[5,2,15],[5,3,7]],[[0,5],[3,2]],false).toMap());
     await db.insert(tableName,Stage(5,"stage2lv80",[[2,1,11]],[[4,0],[4,1],[4,2]],false).toMap());
     await db.insert(tableName,Stage(7,"stage3lv80",[[3,3,11],[1,3,10],[5,2,10],[2,1,10],[4,5,21]],[[6,0],[6,6],[0,6]],false).toMap());
-    await db.insert(tableName,Stage(6,"stage10lv80",[[1,4,154],[1,2,15],[4,0,2],[4,2,14],[3,4,2],[4,5,10]],[[5,0],[5,1]],false).toMap());
+    await db.insert(tableName,Stage(7,"stage10lv80",[[1,4,154],[1,2,15],[5,0,2],[5,2,14],[3,1,2],[3,5,14],[3,4,2],[5,5,210],[5,6,210]],[[6,0],[6,1]],false).toMap());
+
+    await db.insert(tableName,Stage(8,"stage3",[[2,0,3],[7,1,7],[7,4,7],[4,7,3],[1,7,3],[0,3,7],[5,1,14],[5,3,14],[5,5,21],[3,2,21],[3,4,21],[3,6,21],[1,1,10],[1,5,110]],[[7,0],[0,7]],false).toMap());
 
     await db.insert(tableName,Stage(5,"stage3",[[4,4,11]],[[4,1],[4,0]],false).toMap());
     await db.insert(tableName,Stage(6,"stage3",[[5,5,11]],[[5,1],[5,0]],false).toMap());
     await db.insert(tableName,Stage(7,"stage3",[[0,0,11]],[[4,0],[4,1]],false).toMap());
-    await db.insert(tableName,Stage(8,"stage3",[[2,0,3],[7,1,7],[7,4,7],[4,7,3],[1,7,3],[0,3,7]],[[7,0],[0,7]],false).toMap());
     await db.insert(tableName,Stage(9,"stage3",[[0,0,11]],[[4,0],[4,1]],false).toMap());
     await db.insert(tableName,Stage(10,"stage3",[[0,0,11]],[[4,0],[4,1]],false).toMap());
   }

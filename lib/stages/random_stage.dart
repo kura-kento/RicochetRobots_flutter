@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/models/ranking.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
+import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
 import 'package:ricochetrobotsapp/utils/database_help_ranking.dart';
@@ -15,8 +16,6 @@ import 'package:trotter/trotter.dart';
 
 
 class RandomStage extends StatefulWidget {
-  RandomStage({Key key,this.id}) : super(key: key);
-  final int id;
   @override
   _RandomStageState createState() => _RandomStageState();
 }
@@ -41,7 +40,12 @@ class _RandomStageState extends State<RandomStage> {
 
   @override
   void initState(){
-    dataInstall(widget.id);
+    dataInstall();
+    Timer.periodic(
+        Duration(milliseconds: 1),
+            (timer) {
+          setState(() {});
+        });
     s.start();
     super.initState();
   }
@@ -339,7 +343,7 @@ class _RandomStageState extends State<RandomStage> {
 
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
       soundManager.playLocal('goal.mp3');
-      if(stageCount == 1){
+      if(stageCount == 2){
         s.stop();
         rankingSet();
         //変更予定
@@ -351,8 +355,8 @@ class _RandomStageState extends State<RandomStage> {
                 borderRadius: BorderRadius.all(Radius.circular(16.0)),
               ),
               // contentPadding: EdgeInsets.only(bottom: 30.0),
-              title: Text("STAGE"+widget.id.toString()),
-              content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
+              title: Text("CLEAR"),
+              content: Text("TIME ${s.elapsedMilliseconds/1000}"),
               actions: <Widget>[
                 // ボタン領域
                 Container(
@@ -365,7 +369,13 @@ class _RandomStageState extends State<RandomStage> {
                     color: Colors.lightBlueAccent,
                     onPressed: (){
                       soundManager.playLocal('select.mp3');
-                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        SlidePageRoute(
+                          page: TimeAttackTop(),
+                          settings: RouteSettings(name: '/time_attack_top',),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -382,7 +392,7 @@ class _RandomStageState extends State<RandomStage> {
                       Navigator.push(
                         context,
                         SlidePageRoute(
-                          page: RandomStage(id: widget.id+1),
+                          page: RandomStage(),
                           settings: RouteSettings(name: '/stage_builder',),
                         ),
                       );
@@ -401,7 +411,7 @@ class _RandomStageState extends State<RandomStage> {
     }
   }
   void robotsListMap(){
-    List<Color> colors = [Color(0xfff07783),Color(0xff9bb7e2),Color(0xffB3DC86),Color(0xffFFD877)];
+    List<Color> colors = [Color(0xfff07783),Color(0xff75A9FF),Color(0xffB3DC86),Color(0xffFFD877)];
     for(int i=0;i<stageData.robots.length;i++){
       robotsMap.addAll({
         {"color": colors[i],"alignment":Alignment(-1.0+stageData.robots[i][1]*2.0/(stageSize-1),-1.0+stageData.robots[i][0]*2.0/(stageSize-1)),"robot": stageData.robots[i]}
@@ -409,8 +419,8 @@ class _RandomStageState extends State<RandomStage> {
     }
   }
 
-  Future<void> dataInstall(id)async{
-    stageData = await databaseHelper.getSingleStage(id);
+  void dataInstall(){
+    stageData = Stage(8,"stage3",[[2,0,3],[7,1,7],[7,4,7],[4,7,3],[1,7,3],[0,3,7]],[[7,0],[0,7]],false);
     stageSize = stageData.size;
     robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
     robotsListMap();
@@ -458,8 +468,8 @@ class _RandomStageState extends State<RandomStage> {
     }
     setState(() {});
   }
-  Future<void> initRobots()async{
-    stageData = await databaseHelper.getSingleStage(24);
+  void initRobots(){
+    stageData = Stage(8,"stage3",[[2,0,3],[7,1,7],[7,4,7],[4,7,3],[1,7,3],[0,3,7]],[[7,0],[0,7]],false);
     robotsMap = List<Map<String,dynamic>>();
     robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
     robotsListMap();

@@ -22,3 +22,13 @@ class SlidePageRoute extends PageRouteBuilder {
     },
   );
 }
+
+//new RotationTransition(
+//turns: animation,
+//child: new ScaleTransition(
+//scale: animation,
+//child: new FadeTransition(
+//opacity: animation,
+//child: new SecondPage(),
+//),
+//));
