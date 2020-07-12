@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ricochetrobotsapp/models/ranking.dart';
 import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
+import 'package:ricochetrobotsapp/utils/admob.dart';
 import 'package:ricochetrobotsapp/utils/database_help_ranking.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
@@ -27,63 +28,83 @@ class _RankingPageState extends State<RankingPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[400],
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/wood.png"),
+              fit: BoxFit.cover
+          )
+      ),
       child: SafeArea(
         child: Scaffold(
           body: Container(
-            color: Colors.black87,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/wood.png"),
+                    fit: BoxFit.cover
+                )
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        border: Border.all(color: Colors.white,width: 1.0),
-                        borderRadius:  BorderRadius.circular(15.0)
-                    ),
-                    padding: EdgeInsets.all(10.0),
-                    height: 500,
-                    width: 300,
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(bottom:6.0),
-                            child: Text("Ranking",style: TextStyle(color: Colors.white,fontSize: 20),)),
-                        Expanded(
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              return ranking100(index);
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage("assets/images/tree_dark.png"),
+                                  fit: BoxFit.cover
+                              ),
+                              border: Border.all(color: Colors.white,width: 1.0),
+                              borderRadius:  BorderRadius.circular(15.0)
+                          ),
+                          padding: EdgeInsets.all(10.0),
+                          height: (MediaQuery.of(context).size.width),
+                          width: (MediaQuery.of(context).size.width)*0.8,
+                          child: Column(
+                            children: [
+                              Container(
+                                  padding: EdgeInsets.only(bottom:6.0),
+                                  child: Text("Ranking",style: TextStyle(color: Colors.white,fontSize: 20),)),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    return ranking100(index);
+                                  },
+                                  itemCount: 100,),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            iconSize: 40,
+                            icon:Icon(
+                                Icons.clear,
+                                color: Colors.white
+                            ),
+                            onPressed: (){
+                              soundManager.playLocal('cancel.mp3');
+                              Navigator.push(
+                                context,
+                                SlidePageRoute(
+                                  page: TimeAttackTop(),
+                                  settings: RouteSettings(name: '/stage_builder',),
+                                ),
+                              );
                             },
-                            itemCount: 100,),
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                      IconButton(
-                        iconSize: 40,
-                        icon:Icon(
-                            Icons.clear,
-                            color: Colors.white
-                        ),
-                        onPressed: (){
-                          soundManager.playLocal('cancel.mp3');
-                          Navigator.push(
-                            context,
-                            SlidePageRoute(
-                              page: TimeAttackTop(),
-                              settings: RouteSettings(name: '/stage_builder',),
-                            ),
-                          );
-                        },
-                      ),
-                  ],
-                ),
+                AdMob.banner()
               ],
 
             ),

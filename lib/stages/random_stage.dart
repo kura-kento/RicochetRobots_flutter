@@ -6,6 +6,8 @@ import 'package:ricochetrobotsapp/models/ranking.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
 import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
+import 'package:ricochetrobotsapp/stages/random_stage_size6.dart';
+import 'package:ricochetrobotsapp/utils/admob.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
 import 'package:ricochetrobotsapp/utils/database_help_ranking.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
@@ -21,7 +23,7 @@ class RandomStage extends StatefulWidget {
 }
 
 class _RandomStageState extends State<RandomStage> {
-
+ int count = 0;
   final SoundManager soundManager = SoundManager();
   int stageCount = 1;
   Stopwatch s = Stopwatch();
@@ -69,33 +71,58 @@ class _RandomStageState extends State<RandomStage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[400],
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/wood.png"),
+              fit: BoxFit.cover
+          )
+      ),
       child: SafeArea(
         child: Scaffold(
-          body: Column(
-            children: [
-              Container(
-                height: 50,
-                child: Center(child: Text("TIME ${s.elapsed.toString().substring(2, 11)}")),
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: iconButtons()
-              ),
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Column(children: tiles(),),
+          body: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/wood.png"),
+                    fit: BoxFit.cover
+                )
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 30,
+                        child: Center(child: Text("TIME ${s.elapsed.toString().substring(2, 11)}")),
+                      ),
+                      Container(
+                        height: 30,
+                        child: Center(child: Text("stage "+stageCount.toString()+"/10")),
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: iconButtons()
+                      ),
+                      Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Column(children: tiles(),),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child:  Stack(children: robot()),
+                          ),
+                          Text('')
+                        ],
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child:  Stack(children: robot()),
-                  ),
-                  Text('')
-                ],
-              ),
-            ],
+                ),
+                AdMob.banner()
+              ],
+
+            ),
           ),
         ),
       ),
@@ -157,30 +184,39 @@ class _RandomStageState extends State<RandomStage> {
     for(int i = 0;i < _icons.length; i++){
       _cache.add(
         FlatButton.icon(
-          icon:Icon(
-              _icons[i],
-              color: Colors.black
+            icon:Icon(
+                _icons[i],
+                color: Colors.black
+            ),
+            label: Text(""),
+            onPressed: (){
+              if(i==1){
+                shuffle();
+                initRobots();
+              }else if(i==0){
+                if(count >= 10){
+                  Navigator.push(
+                    context,
+                    SlidePageRoute(
+                      page: RandomStage6(),
+                      settings: RouteSettings(name: '/stage_builder',),
+                    ),
+                  );
+                }
+                count++;
+                initRobots();
+              }else{
+                soundManager.playLocal('select.mp3');
+                Navigator.push(
+                  context,
+                  SlidePageRoute(
+                    page: _route[i],
+                    settings: RouteSettings(name: '/stage_builder',),
+                  ),
+                );
+              }
+            },
           ),
-          label: Text(""),
-          onPressed: (){
-            if(i==1){
-              shuffle();
-              initRobots();
-            }else if(i==0){
-              initRobots();
-            }else{
-              soundManager.playLocal('select.mp3');
-              Navigator.push(
-                context,
-                SlidePageRoute(
-                  page: _route[i],
-                  settings: RouteSettings(name: '/stage_builder',),
-                ),
-              );
-            }
-
-          },
-        ),
       );
     }
     return _cache;
@@ -343,7 +379,7 @@ class _RandomStageState extends State<RandomStage> {
 
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
       soundManager.playLocal('goal.mp3');
-      if(stageCount == 2){
+      if(stageCount == 10){
         s.stop();
         rankingSet();
         //変更予定

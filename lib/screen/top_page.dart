@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/screen/stage_select.dart';
 import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
 import 'package:ricochetrobotsapp/stages/stage_builder.dart';
+import 'package:ricochetrobotsapp/utils/admob.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
 import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
@@ -18,59 +19,102 @@ class _TopPageState extends State<TopPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[400],
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/wood.png"),
+              fit: BoxFit.cover
+          )
+      ),
       child: SafeArea(
         child: Scaffold(
-          body: Center(
+          body: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/wood.png"),
+                    fit: BoxFit.cover
+                )
+            ),
             child: Column(
               children: [
-                Container(height: 200,),
-                Text("stage"+SharedPrefs.getStage().toString()),
-                Container(height: 50,),
-                IconButton(
-                  icon: Icon(Icons.play_arrow),
-                  iconSize: 40,
-                  onPressed: (){
-                    soundManagerSelect.playLocal('start.mp3');
-                    Navigator.push(
-                      context,
-                      SlidePageRoute(
-                        page: StageBuilder(id: SharedPrefs.getStage()),
-                        settings: RouteSettings(name: '/stage_builder',),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Container(height: 200,),
+                      Text("stage"+SharedPrefs.getStage().toString(),style: TextStyle(fontSize: 20),),
+                      Container(height: 50,),
+                      Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage("assets/images/btn03_04_light.png"),
+                                fit: BoxFit.cover
+                            )
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.play_arrow,color: Color(0xFF663300)),
+                          iconSize: 40,
+                          onPressed: (){
+                            soundManagerSelect.playLocal('start.mp3');
+                            Navigator.push(
+                              context,
+                              SlidePageRoute(
+                                page: StageBuilder(id: SharedPrefs.getStage()),
+                                settings: RouteSettings(name: '/stage_builder',),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    );
-                  },
-                ),
-                Container(height: 25,),
-                IconButton(
-                  icon: Icon(Icons.apps),
-                  iconSize: 40,
-                  onPressed: (){
-                    soundManagerSelect.playLocal('select.mp3');
-                    Navigator.push(
-                      context,
-                      SlidePageRoute(
-                        page: StageSelect(),
-                        settings: RouteSettings(),
+                      Container(height: 25,),
+                      Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage("assets/images/btn03_04_light.png"),
+                                fit: BoxFit.cover
+                            )
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.apps,color: Color(0xFF663300)),
+                          iconSize: 40,
+                          onPressed: (){
+                            soundManagerSelect.playLocal('select.mp3');
+                            Navigator.push(
+                              context,
+                              SlidePageRoute(
+                                page: StageSelect(),
+                                settings: RouteSettings(),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    );
-                  },
-                ),
-                Container(height: 25,),
-                IconButton(
-                  icon: Icon(Icons.timer),
-                  iconSize: 40,
-                  onPressed: (){
-                    soundManagerSelect.playLocal('select.mp3');
-                    Navigator.push(
-                      context,
-                      SlidePageRoute(
-                        page: TimeAttackTop(),
-                        settings: RouteSettings(),
+                      Container(height: 25,),
+                      Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage("assets/images/btn03_04_light.png"),
+                                fit: BoxFit.cover
+                            )
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.timer,color: Color(0xFF663300),),
+                          iconSize: 40,
+                          onPressed: (){
+                            soundManagerSelect.playLocal('select.mp3');
+                            Navigator.push(
+                              context,
+                              SlidePageRoute(
+                                page: TimeAttackTop(),
+                                settings: RouteSettings(),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    );
-                  },
+
+                    ],
+                  ),
                 ),
+                AdMob.banner()
               ],
             ),
           )

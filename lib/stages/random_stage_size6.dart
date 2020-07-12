@@ -1,45 +1,51 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_store_listing/flutter_store_listing.dart';
+import 'package:ricochetrobotsapp/models/ranking.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
-import 'package:ricochetrobotsapp/screen/stage_select.dart';
+import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
-import 'package:ricochetrobotsapp/utils/admob.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
+import 'package:ricochetrobotsapp/utils/database_help_ranking.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
 import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
+import 'package:trotter/trotter.dart';
 
 
 
-class StageBuilder extends StatefulWidget {
-  StageBuilder({Key key,this.id}) : super(key: key);
-  final int id;
+class RandomStage6 extends StatefulWidget {
   @override
-  _StageBuilderState createState() => _StageBuilderState();
+  _RandomStage6State createState() => _RandomStage6State();
 }
 
-class _StageBuilderState extends State<StageBuilder> {
-
+class _RandomStage6State extends State<RandomStage6> {
+ int count = 0;
   final SoundManager soundManager = SoundManager();
-
+  int stageCount = 1;
+  Stopwatch s = Stopwatch();
   // int stageSize = 5;//5×5
   //2.0/(stageSize-1)
-  int stageSize = 10;
+  int stageSize = 6;
   List<int>  after = [0,0];
   List<List<int>> parameter;
   List<List<int>> robotList;
-  Stopwatch s = Stopwatch();
   List<Map<String,dynamic>> robotsMap = List<Map<String,dynamic>>();
 
   DatabaseHelper databaseHelper = DatabaseHelper();
+  DatabaseHelperRanking databaseHelperRanking = DatabaseHelperRanking();
   Stage stageData;
   Color wallColors = Color(0xff888888);
+
   @override
   void initState(){
-    dataInstall(widget.id);
+    dataInstall();
+    Timer.periodic(
+        Duration(milliseconds: 1),
+            (timer) {
+          setState(() {});
+        });
     s.start();
     super.initState();
   }
@@ -57,68 +63,43 @@ class _StageBuilderState extends State<StageBuilder> {
     return  list;
   }
 
+//  AlignmentGeometry get _alignment => robotsMap[0]["alignment"];
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/wood.png"),
-              fit: BoxFit.cover
-          )
-      ),
+      color: Colors.grey[400],
       child: SafeArea(
         child: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/wood.png"),
-                fit: BoxFit.cover
-              )
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        child: Center(
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage("assets/images/btn03_01_light.png"),
-                                        fit: BoxFit.cover
-                                    )
-                                ),
-                              child: Text("STAGE${widget.id}",style: TextStyle(color: Colors.white),))
-                        ),
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: iconButtons()
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom:10.0),),
-                      Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Column(children: tiles(),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Stack(children: robot()),
-                          ),
-
-                          Text('')
-                        ],
-                      ),
-                    ],
+          body: Column(
+            children: [
+              Container(
+                height: 30,
+                child: Center(child: Text("TIME ${s.elapsed.toString().substring(2, 11)}")),
+              ),
+              Container(
+                height: 30,
+                child: Center(child: Text("stage "+stageCount.toString()+"/10")),
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: iconButtons()
+              ),
+              Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Column(children: tiles(),),
                   ),
-                ),
-                AdMob.banner()
-              ],
-
-            ),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child:  Stack(children: robot()),
+                  ),
+                  Text('')
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -132,13 +113,12 @@ class _StageBuilderState extends State<StageBuilder> {
         List<Widget> _listCache = [Container(height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize, width: 4.0, color: wallColors,)];
         for (int j = 0; j < stageSize; j++) {
           _listCache.add(
-                Container(
-                      height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                      width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                      color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Color(0xfff07783): parameter[i][j] != null && parameter[i][j] % 210 == 0 ? wallColors: Colors.grey[300],
-//                      child: Text("${[i,j]}"),
-                      child: Text(""),
-                    ),
+            Container(
+              height: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+              width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+              color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Color(0xfff07783) : parameter[i][j] != null && parameter[i][j] % 210 == 0 ? wallColors: Colors.grey[300],
+              child: Text(""),
+            ),
           );
           _listCache.add(
               Container(
@@ -151,11 +131,11 @@ class _StageBuilderState extends State<StageBuilder> {
         _list.add(Row(children: _listCache,));
         for (int j = 0; j < stageSize; j++) {
           a.add(
-            Container(
-                width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
-                height: 4.0,
-                color: wallColor2(i,j)
-            )
+              Container(
+                  width: (MediaQuery.of(context).size.width - 10 - (4 * stageSize)) / stageSize,
+                  height: 4.0,
+                  color: wallColor2(i,j)
+              )
           );
           a.add(
               Container(
@@ -174,6 +154,93 @@ class _StageBuilderState extends State<StageBuilder> {
     return _list;
 
   }
+  List<Widget>iconButtons(){
+    List _icons = [Icons.refresh,Icons.cached,Icons.home];
+    List _route = ["","",TopPage()];
+    List<Widget> _cache=[];
+    for(int i = 0;i < _icons.length; i++){
+      _cache.add(
+        FlatButton.icon(
+          icon:Icon(
+              _icons[i],
+              color: Colors.black
+          ),
+          label: Text(""),
+          onPressed: (){
+            if(i==1){
+              shuffle();
+              initRobots();
+            }else if(i==0){
+              if(count >= 10){
+                Navigator.push(
+                  context,
+                  SlidePageRoute(
+                    page: TopPage(),
+                    settings: RouteSettings(name: '/stage_builder',),
+                  ),
+                );
+              }
+              count++;
+              initRobots();
+            }else{
+              soundManager.playLocal('select.mp3');
+              Navigator.push(
+                context,
+                SlidePageRoute(
+                  page: _route[i],
+                  settings: RouteSettings(name: '/stage_builder',),
+                ),
+              );
+            }
+
+          },
+        ),
+      );
+    }
+    return _cache;
+  }
+  List<Widget> robot(){
+    List<Widget> _list = [Text('')];
+    for(int mapIndex=0;mapIndex < robotsMap.length;mapIndex++){
+      _list.add(
+        GestureDetector(
+          onVerticalDragUpdate: (detail) {
+            if (detail.primaryDelta > 5 || detail.primaryDelta < -5){
+              detail.primaryDelta > 5 ? bottomMove(mapIndex) : topMove(mapIndex);
+              //ここに１秒くらい停止させる。
+              moveProcess(mapIndex);
+            }
+          },
+          onHorizontalDragUpdate: (detail) {
+            if (detail.primaryDelta > 5 || detail.primaryDelta < -5) {
+              detail.primaryDelta > 5 ? rightMove(mapIndex) : leftMove(mapIndex);
+              //ここに１秒くらい停止させる。
+              moveProcess(mapIndex);
+            }
+          },
+          child: Container(
+            height: (MediaQuery.of(context).size.width - 10),
+            width:  (MediaQuery.of(context).size.width - 10),
+            child: AnimatedAlign(
+              alignment: robotsMap[mapIndex]["alignment"],
+              duration: Duration(milliseconds: 500),
+              child: Container(
+                margin: EdgeInsets.all(2.0+25.0/stageSize),
+                width: (MediaQuery.of(context).size.width-50-10-(4*stageSize)) / stageSize,
+                height: (MediaQuery.of(context).size.width-50-10-(4*stageSize)) / stageSize,
+                decoration: BoxDecoration(
+                    color: robotsMap[mapIndex]["color"],
+                    borderRadius: BorderRadius.circular(100)),
+              ),
+              curve: Curves.easeInOut,
+            ),
+          ),
+        ),
+      );
+    }
+    return _list;
+  }
+
   Color wallColor(i,j){
     if(j == stageSize-1 ){
       return wallColors;
@@ -207,82 +274,6 @@ class _StageBuilderState extends State<StageBuilder> {
       }
     }
     return Colors.white;
-  }
-
-  List<Widget>iconButtons(){
-    List _icons = [Icons.refresh,Icons.apps,Icons.home];
-    List _route = [StageBuilder(id: widget.id),StageSelect(),TopPage()];
-    List<Widget> _cache=[];
-    for(int i = 0;i < _icons.length; i++){
-      _cache.add(
-        Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/btn03_04_light.png"),
-                  fit: BoxFit.cover
-              )
-          ),
-          child: IconButton(
-            icon:Icon(
-                _icons[i],
-                color: Color(0xFF663300)
-            ),
-            onPressed: (){
-              soundManager.playLocal('select.mp3');
-              Navigator.push(
-                context,
-                SlidePageRoute(
-                  page: _route[i],
-                  settings: RouteSettings(name: '/stage_builder',),
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    }
-    return _cache;
-  }
-  List<Widget> robot(){
-    List<Widget> _list = [Text('')];
-    for(int mapIndex=0;mapIndex < robotsMap.length;mapIndex++){
-      _list.add(
-        GestureDetector(
-          onVerticalDragUpdate: (detail) {
-            if (detail.primaryDelta > 5 || detail.primaryDelta < -5){
-              detail.primaryDelta > 5 ? bottomMove(mapIndex) : topMove(mapIndex);
-              //ここに１秒くらい停止させる。
-              moveProcess(mapIndex);
-            }
-          },
-          onHorizontalDragUpdate: (detail) {
-            if (detail.primaryDelta > 5 || detail.primaryDelta < -5) {
-              detail.primaryDelta > 5 ? rightMove(mapIndex) : leftMove(mapIndex);
-              //ここに１秒くらい停止させる。
-              moveProcess(mapIndex);
-            }
-          },
-          child: Container(
-            height: (MediaQuery.of(context).size.width - 10),
-            width: (MediaQuery.of(context).size.width - 10),
-            child: AnimatedAlign(
-              alignment: robotsMap[mapIndex]["alignment"],
-              duration: Duration(milliseconds: 500),
-              child: Container(
-                margin: EdgeInsets.all(2.0+25.0/stageSize),
-                width: (MediaQuery.of(context).size.width-50-10-(4*stageSize)) / stageSize,
-                height: (MediaQuery.of(context).size.width-50-10-(4*stageSize)) / stageSize,
-                decoration: BoxDecoration(
-                    color: robotsMap[mapIndex]["color"],
-                    borderRadius: BorderRadius.circular(100)),
-              ),
-              curve: Curves.easeInOut,
-            ),
-          ),
-        ),
-      );
-    }
-    return _list;
   }
 
   void topMove(mapIndex){
@@ -365,68 +356,74 @@ class _StageBuilderState extends State<StageBuilder> {
     if(parameter[after[0]][after[1]] == null){
 
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
-      SharedPrefs.setLoginCount(SharedPrefs.getLoginCount()+1);
-      if(Platform.isIOS && SharedPrefs.getLoginCount() % 20 == 0){
-        FlutterStoreListing().launchRequestReview(onlyNative: true);
-      }
       soundManager.playLocal('goal.mp3');
-      s.stop();
-      unlock();
-      //変更予定
-      SharedPrefs.setStage(widget.id+1);
-      showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
-            ),
-           // contentPadding: EdgeInsets.only(bottom: 30.0),
+      if(stageCount == 2){
+        s.stop();
+        rankingSet();
+        //変更予定
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              ),
+              // contentPadding: EdgeInsets.only(bottom: 30.0),
               title: Text("CLEAR"),
-            content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
-            actions: <Widget>[
-              // ボタン領域
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey,width:1.0)
+              content: Text("TIME ${s.elapsedMilliseconds/1000}"),
+              actions: <Widget>[
+                // ボタン領域
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey,width:1.0)
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.reply),
+                    iconSize: 25,
+                    color: Colors.lightBlueAccent,
+                    onPressed: (){
+                      soundManager.playLocal('select.mp3');
+                      Navigator.push(
+                        context,
+                        SlidePageRoute(
+                          page: TimeAttackTop(),
+                          settings: RouteSettings(name: '/time_attack_top',),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                child: IconButton(
-                  icon: Icon(Icons.reply),
-                  iconSize: 25,
-                  color: Colors.lightBlueAccent,
-                  onPressed: (){
-                    soundManager.playLocal('select.mp3');
-                    Navigator.pop(context);
-                  },
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey,width:1.0)
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.play_arrow),
+                    iconSize: 25,
+                    color: Colors.lightBlueAccent,
+                    onPressed: (){
+                      soundManager.playLocal('select.mp3');
+                      Navigator.push(
+                        context,
+                        SlidePageRoute(
+                          page: RandomStage6(),
+                          settings: RouteSettings(name: '/stage_builder',),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey,width:1.0)
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.play_arrow),
-                  iconSize: 25,
-                  color: Colors.lightBlueAccent,
-                  onPressed: (){
-                    soundManager.playLocal('select.mp3');
-                    Navigator.push(
-                      context,
-                      SlidePageRoute(
-                        page: StageBuilder(id: widget.id+1),
-                        settings: RouteSettings(name: '/stage_builder',),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
-      );
+              ],
+            );
+          },
+        );
+      }else{
+        stageCount++;
+        shuffle();
+        initRobots();
+      }
     }
   }
-
   void robotsListMap(){
     List<Color> colors = [Color(0xfff07783),Color(0xff75A9FF),Color(0xffB3DC86),Color(0xffFFD877)];
     for(int i=0;i<stageData.robots.length;i++){
@@ -436,20 +433,64 @@ class _StageBuilderState extends State<StageBuilder> {
     }
   }
 
-  Future<void> dataInstall(id)async{
-    stageData = await databaseHelper.getSingleStage(id);
+  void dataInstall(){
+    stageData = Stage(6,"stage3",[],[[5,0],[0,5]],false);
     stageSize = stageData.size;
     robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
+    robotsListMap();
+    shuffle();
+    setState(() {});
+  }
+  shuffle(){
     parameter = parameterList();
+    List<String> a=[];
+    final bagOfItems = [1,2,3,4],
+        combos = Amalgams(2, bagOfItems);
+    for (final combo in combos()) {
+      a.add("${combo[0]}-${combo[1]}");
+    }
+//    a.remove("2-1");
+//    a.remove("3-1");
+//    a.remove("6-1");
+//    a.remove("6-2");
+//    a.remove("6-4");
+//    a.remove("6-5");
+//    a.remove("4-6");
+//    a.remove("5-6");
+//    a.remove("1-6");
+//    a.remove("2-6");
+//    a.remove("1-3");
+//    a.remove("1-4");
+    //をparameterにいれる。
+    List<int> wallInt = [10,14,15,21];
+    var b;
+    for(int i=0;i < 7;i++){
+      a.shuffle();
+      wallInt.shuffle();
+      b = a[0].split("-");
+      if(i==0){
+        parameter[int.parse(b[0])][int.parse(b[1])] = wallInt[0]*11;
+      }else{
+        parameter[int.parse(b[0])][int.parse(b[1])] = wallInt[0];
+      }
+      for(int first=0;first < 3;first++){
+        for(int last=0;last < 3;last++){
+          a.remove("${int.parse(b[0])+first-1}"+"-"+"${int.parse(b[1])+last-1}");
+        }
+      }
+      if(a.length == 0){break;}
+    }
+    setState(() {});
+  }
+  void initRobots(){
+    stageData = Stage(6,"stage3",[],[[5,0],[0,5]],false);
+    robotsMap = List<Map<String,dynamic>>();
+    robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
     robotsListMap();
     setState(() {});
   }
-  Future<void> unlock()async{
-    Stage _data;
-    _data = await databaseHelper.getSingleStage(stageData.id+1);
-    _data.lock = false;
-    await databaseHelper.updateStage(_data);
-    setState(() {});
+  Future<void> rankingSet()async{
+    await databaseHelperRanking.insertRanking(Ranking(SharedPrefs.getName(),s.elapsedMilliseconds));
   }
 }
 

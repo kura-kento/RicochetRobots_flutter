@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
       ),
@@ -35,8 +36,8 @@ class MyApp extends StatelessWidget {
   }
   Future<Widget> setting()async{
     await SharedPrefs.setInstance();
-//    final SoundManager bgmManager = SoundManager();
-//    bgmManager.playLocal('Blue_Moon_2.mp3');
+    final SoundManager bgmManager = SoundManager();
+    bgmManager.playLocal('Blue_Moon_2.mp3');
     DatabaseHelper.db = await DatabaseHelper.initializeDatabase();
     DatabaseHelperRanking.db = await DatabaseHelperRanking.initializeDatabase();
     return TopPage();
