@@ -40,7 +40,16 @@ class _TopPageState extends State<TopPage> {
                   child: Column(
                     children: [
                       Container(height: 200,),
-                      Text("stage"+SharedPrefs.getStage().toString(),style: TextStyle(fontSize: 20),),
+                      Container(
+                        padding: EdgeInsets.only(top:5.0,bottom:5.0,left:5.0,right:5.0),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/images/btn03_01_light.png"),
+                              // fit: BoxFit.cover
+                            )
+                        ),
+                        child: Center(child: Text("STAGE"+SharedPrefs.getStage().toString(),style: TextStyle(fontSize:20,color: Colors.white))),
+                      ),
                       Container(height: 50,),
                       Container(
                         decoration: BoxDecoration(

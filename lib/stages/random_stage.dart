@@ -44,7 +44,7 @@ class _RandomStageState extends State<RandomStage> {
   void initState(){
     dataInstall();
     Timer.periodic(
-        Duration(milliseconds: 1),
+        Duration(seconds: 1),
             (timer) {
           setState(() {});
         });
@@ -91,18 +91,36 @@ class _RandomStageState extends State<RandomStage> {
                 Expanded(
                   child: Column(
                     children: [
-                      Container(
-                        height: 30,
-                        child: Center(child: Text("TIME ${s.elapsed.toString().substring(2, 11)}")),
-                      ),
-                      Container(
-                        height: 30,
-                        child: Center(child: Text("stage "+stageCount.toString()+"/10")),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(top:20.0,bottom:25.0,left:20.0,right:20.0),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage("assets/images/btn03_01_light.png"),
+                                  //fit: BoxFit.cover
+                                )
+                            ),
+                            child: Center(child: Text("TIME ${s.elapsed.toString().substring(2, 7)}",style: TextStyle(fontSize:20,color: Colors.white))),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top:20.0,bottom:25.0,left:20.0,right:20.0),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage("assets/images/btn03_01_light.png"),
+                                  // fit: BoxFit.cover
+                                )
+                            ),
+                            child: Center(child: Text("STAGE "+stageCount.toString()+"／10",style: TextStyle(fontSize:20,color: Colors.white))),
+                          ),
+                        ],
                       ),
                       Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: iconButtons()
                       ),
+                      Container(height: 30),
                       Stack(
                         children: [
                           Padding(
@@ -119,7 +137,7 @@ class _RandomStageState extends State<RandomStage> {
                     ],
                   ),
                 ),
-                AdMob.banner()
+               AdMob.banner()
               ],
 
             ),
@@ -183,40 +201,49 @@ class _RandomStageState extends State<RandomStage> {
     List<Widget> _cache=[];
     for(int i = 0;i < _icons.length; i++){
       _cache.add(
-        FlatButton.icon(
+        Container(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/btn03_04_light.png"),
+                fit: BoxFit.cover
+            ),
+          ),
+          child: IconButton(
             icon:Icon(
                 _icons[i],
-                color: Colors.black
+                color: Color(0xFF663300)
             ),
-            label: Text(""),
-            onPressed: (){
-              if(i==1){
-                shuffle();
-                initRobots();
-              }else if(i==0){
-                if(count >= 10){
+              onPressed: (){
+                if(i==1){
+                  shuffle();
+                  initRobots();
+                }else if(i==0){
+                  if(count >= 10){
+                    Navigator.push(
+                      context,
+                      SlidePageRoute(
+                        page: RandomStage6(),
+                        settings: RouteSettings(name: '/stage_builder',),
+                      ),
+                    );
+                  }
+                  count++;
+                  initRobots();
+                }else{
+                  soundManager.playLocal('select.mp3');
                   Navigator.push(
                     context,
                     SlidePageRoute(
-                      page: RandomStage6(),
+                      page: _route[i],
                       settings: RouteSettings(name: '/stage_builder',),
                     ),
                   );
                 }
-                count++;
-                initRobots();
-              }else{
-                soundManager.playLocal('select.mp3');
-                Navigator.push(
-                  context,
-                  SlidePageRoute(
-                    page: _route[i],
-                    settings: RouteSettings(name: '/stage_builder',),
-                  ),
-                );
-              }
-            },
-          ),
+              },
+            ),
+        ),
       );
     }
     return _cache;
@@ -397,12 +424,15 @@ class _RandomStageState extends State<RandomStage> {
                 // ボタン領域
                 Container(
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey,width:1.0)
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/btn03_04_light.png"),
+                        fit: BoxFit.cover
+                    ),
                   ),
                   child: IconButton(
                     icon: Icon(Icons.reply),
                     iconSize: 25,
-                    color: Colors.lightBlueAccent,
+                    color: Color(0xFF663300),
                     onPressed: (){
                       soundManager.playLocal('select.mp3');
                       Navigator.push(
@@ -417,12 +447,15 @@ class _RandomStageState extends State<RandomStage> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey,width:1.0)
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/btn03_04_light.png"),
+                        fit: BoxFit.cover
+                    ),
                   ),
                   child: IconButton(
                     icon: Icon(Icons.play_arrow),
                     iconSize: 25,
-                    color: Colors.lightBlueAccent,
+                    color: Color(0xFF663300),
                     onPressed: (){
                       soundManager.playLocal('select.mp3');
                       Navigator.push(

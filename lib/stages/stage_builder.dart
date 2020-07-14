@@ -80,19 +80,16 @@ class _StageBuilderState extends State<StageBuilder> {
                 Expanded(
                   child: Column(
                     children: [
-                      Container(
-                        height: 50,
-                        child: Center(
+                        Center(
                             child: Container(
+                                padding: EdgeInsets.only(top:25.0,bottom:28.0,left:20.0,right:20.0),
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
                                         image: AssetImage("assets/images/btn03_01_light.png"),
-                                        fit: BoxFit.cover
                                     )
                                 ),
-                              child: Text("STAGE${widget.id}",style: TextStyle(color: Colors.white),))
+                              child: Text("STAGE${widget.id}",style: TextStyle(fontSize:20,color: Colors.white),))
                         ),
-                      ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: iconButtons()
@@ -117,7 +114,6 @@ class _StageBuilderState extends State<StageBuilder> {
                 ),
                 AdMob.banner()
               ],
-
             ),
           ),
         ),
@@ -381,19 +377,21 @@ class _StageBuilderState extends State<StageBuilder> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(16.0)),
             ),
-           // contentPadding: EdgeInsets.only(bottom: 30.0),
               title: Text("CLEAR"),
             content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
             actions: <Widget>[
               // ボタン領域
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey,width:1.0)
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/btn03_04_light.png"),
+                      fit: BoxFit.cover
+                    ),
                 ),
                 child: IconButton(
                   icon: Icon(Icons.reply),
                   iconSize: 25,
-                  color: Colors.lightBlueAccent,
+                  color: Color(0xFF663300),
                   onPressed: (){
                     soundManager.playLocal('select.mp3');
                     Navigator.pop(context);
@@ -402,12 +400,15 @@ class _StageBuilderState extends State<StageBuilder> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey,width:1.0)
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/btn03_04_light.png"),
+                      fit: BoxFit.cover
+                  ),
                 ),
                 child: IconButton(
                   icon: Icon(Icons.play_arrow),
                   iconSize: 25,
-                  color: Colors.lightBlueAccent,
+                  color: Color(0xFF663300),
                   onPressed: (){
                     soundManager.playLocal('select.mp3');
                     Navigator.push(
