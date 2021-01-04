@@ -221,18 +221,18 @@ class _RandomStageState extends State<RandomStage> {
                   initRobots();
                 }else if(i==0){
                   if(count >= 10){
-                    Navigator.push(
-                      context,
-                      SlidePageRoute(
-                        page: RandomStage6(),
-                        settings: RouteSettings(name: '/stage_builder',),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   // SlidePageRoute(
+                    //   //   page: RandomStage6(),
+                    //   //   settings: RouteSettings(name: '/stage_builder',),
+                    //   // ),
+                    // );
                   }
                   count++;
                   initRobots();
                 }else{
-                  soundManager.playLocal('select.mp3');
+                  // soundManager.playLocal('select.mp3');
                   Navigator.push(
                     context,
                     SlidePageRoute(
@@ -399,13 +399,13 @@ class _RandomStageState extends State<RandomStage> {
   }
 
   moveProcess(mapIndex){
-    soundManager.playLocal('move.mp3');
+    // soundManager.playLocal('move.mp3');
     robotsMap[mapIndex]["alignment"] = Alignment(-1.0 + after[1] * (2.0/(stageSize-1)),-1.0+ after[0] * (2.0/(stageSize-1)));
     setState(() {});
     if(parameter[after[0]][after[1]] == null){
 
     }else if(parameter[after[0]][after[1]]% 11 == 0 && mapIndex == 0){
-      soundManager.playLocal('goal.mp3');
+      // soundManager.playLocal('goal.mp3');
       if(stageCount == 10){
         s.stop();
         rankingSet();
@@ -434,7 +434,7 @@ class _RandomStageState extends State<RandomStage> {
                     iconSize: 25,
                     color: Color(0xFF663300),
                     onPressed: (){
-                      soundManager.playLocal('select.mp3');
+                      // soundManager.playLocal('select.mp3');
                       Navigator.push(
                         context,
                         SlidePageRoute(
@@ -457,7 +457,7 @@ class _RandomStageState extends State<RandomStage> {
                     iconSize: 25,
                     color: Color(0xFF663300),
                     onPressed: (){
-                      soundManager.playLocal('select.mp3');
+                      // soundManager.playLocal('select.mp3');
                       Navigator.push(
                         context,
                         SlidePageRoute(
