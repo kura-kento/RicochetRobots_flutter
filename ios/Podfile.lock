@@ -1,4 +1,6 @@
 PODS:
+  - audioplayers (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_google_ad_manager (0.0.1):
     - Flutter
@@ -52,6 +54,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
   - Flutter (from `Flutter`)
   - flutter_google_ad_manager (from `.symlinks/plugins/flutter_google_ad_manager/ios`)
   - flutter_store_listing (from `.symlinks/plugins/flutter_store_listing/ios`)
@@ -71,6 +74,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  audioplayers:
+    :path: ".symlinks/plugins/audioplayers/ios"
   Flutter:
     :path: Flutter
   flutter_google_ad_manager:
@@ -89,6 +94,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
+  audioplayers: 455322b54050b30ea4b1af7cd9e9d105f74efa8c
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_google_ad_manager: 6500e04ad927e5c4b8f5286a87aa138aac13feb4
   flutter_store_listing: 8a8514f63b41943433de5d684204ebf1edcbbfe4
