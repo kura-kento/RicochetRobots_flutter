@@ -23,10 +23,11 @@ class StageBuilder extends StatefulWidget {
 
 class _StageBuilderState extends State<StageBuilder> {
 
-  final SoundManager soundManager = SoundManager();
+  SoundManager soundManager = SoundManager();
 
   // int stageSize = 5;//5×5
   //2.0/(stageSize-1)
+  bool isLoading = false;
   int stageSize = 10;
   List<int>  after = [0,0];
   List<List<int>> parameter;
@@ -67,55 +68,61 @@ class _StageBuilderState extends State<StageBuilder> {
           )
       ),
       child: SafeArea(
-        child: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/wood.png"),
-                fit: BoxFit.cover
-              )
-            ),
-            child: Column(
-              children: [
-                Expanded(
+        child: Column(
+          children: [
+            Expanded(
+              child: Scaffold(
+                body: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/wood.png"),
+                      fit: BoxFit.cover
+                    )
+                  ),
                   child: Column(
                     children: [
-                        Center(
-                            child: Container(
-                                padding: EdgeInsets.only(top:25.0,bottom:28.0,left:20.0,right:20.0),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage("assets/images/btn03_01_light.png"),
-                                    )
+                      Expanded(
+                        child: Column(
+                          children: [
+                              Center(
+                                  child: Container(
+                                      padding: EdgeInsets.only(top:25.0,bottom:28.0,left:20.0,right:20.0),
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: AssetImage("assets/images/btn03_01_light.png"),
+                                          )
+                                      ),
+                                    child: Text("STAGE${widget.id}",style: TextStyle(fontSize:20,color: Colors.white),))
+                              ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: iconButtons()
+                            ),
+                            Padding(padding: EdgeInsets.only(bottom:10.0),),
+                            Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Column(children: tiles(),),
                                 ),
-                              child: Text("STAGE${widget.id}",style: TextStyle(fontSize:20,color: Colors.white),))
-                        ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: iconButtons()
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom:10.0),),
-                      Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Column(children: tiles(),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Stack(children: robot()),
-                          ),
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Stack(children: robot()),
+                                ),
 
-                          Text('')
-                        ],
+                                Text('')
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-                AdMob.banner()
-              ],
+              ),
             ),
-          ),
+            AdMob.banner()
+          ],
         ),
       ),
     );
@@ -354,7 +361,8 @@ class _StageBuilderState extends State<StageBuilder> {
     }
   }
 
-  moveProcess(mapIndex){
+  moveProcess(mapIndex) {
+    isLoading = true;
     soundManager.playLocal('move.mp3');
     robotsMap[mapIndex]["alignment"] = Alignment(-1.0 + after[1] * (2.0/(stageSize-1)),-1.0+ after[0] * (2.0/(stageSize-1)));
     setState(() {});

@@ -37,64 +37,70 @@ void initState(){
             )
         ),
       child: SafeArea(
-        child: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/wood.png"),
-                    fit: BoxFit.cover
-                )
-            ),
-            child: Column(
-              children: [
-                Expanded(
+        child: Column(
+          children: [
+            Expanded(
+              child: Scaffold(
+                body: Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/images/wood.png"),
+                          fit: BoxFit.cover
+                      )
+                  ),
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage("assets/images/right_btn.png"),
-                                      fit: BoxFit.cover
-                                  )
-                              ),
-                              child: IconButton(
-                                onPressed: (){
-                                  soundManager.playLocal('select.mp3');
-                                  Navigator.push(
-                                    context,
-                                    SlidePageRoute(
-                                      page: TopPage(),
-                                      settings: RouteSettings(name: '/stage_builder',),
-                                    ),
-                                  );
-                                },
-                                //""
-                                icon: Icon(Icons.chevron_left,size: 45,color: Color(0xFF663300),),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       Expanded(
-                          child: SingleChildScrollView(
-                        child: Container(
-                          child:Column(children: stageItems())
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: AssetImage("assets/images/right_btn.png"),
+                                            fit: BoxFit.cover
+                                        )
+                                    ),
+                                    child: IconButton(
+                                      onPressed: (){
+                                        soundManager.playLocal('select.mp3');
+                                        Navigator.push(
+                                          context,
+                                          SlidePageRoute(
+                                            page: TopPage(),
+                                            settings: RouteSettings(name: '/stage_builder',),
+                                          ),
+                                        );
+                                      },
+                                      //""
+                                      icon: Icon(Icons.chevron_left,size: 45,color: Color(0xFF663300),),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Expanded(
+                                child: SingleChildScrollView(
+                              child: Container(
+                                child:Column(children: stageItems())
+                              ),
+                            )),
+                          ],
                         ),
-                      )),
+                      ),
                     ],
                   ),
                 ),
-                AdMob.banner()
-              ],
+              ),
             ),
-          ),
+            AdMob.banner()
+          ],
         ),
       ),
     );

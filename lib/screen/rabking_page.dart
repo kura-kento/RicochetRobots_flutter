@@ -35,80 +35,86 @@ class _RankingPageState extends State<RankingPage> {
           )
       ),
       child: SafeArea(
-        child: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/wood.png"),
-                    fit: BoxFit.cover
-                )
-            ),
-            child: Column(
-              children: [
-                Expanded(
+        child: Column(
+          children: [
+            Expanded(
+              child: Scaffold(
+                body: Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/images/wood.png"),
+                          fit: BoxFit.cover
+                      )
+                  ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage("assets/images/tree_dark.png"),
-                                  fit: BoxFit.cover
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage("assets/images/tree_dark.png"),
+                                        fit: BoxFit.cover
+                                    ),
+                                    border: Border.all(color: Colors.white,width: 1.0),
+                                    borderRadius:  BorderRadius.circular(15.0)
+                                ),
+                                padding: EdgeInsets.all(10.0),
+                                height: (MediaQuery.of(context).size.width),
+                                width: (MediaQuery.of(context).size.width)*0.8,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        padding: EdgeInsets.only(bottom:6.0),
+                                        child: Text("Ranking",style: TextStyle(color: Colors.white,fontSize: 20),)),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemBuilder: (context, index) {
+                                          return ranking100(index);
+                                        },
+                                        itemCount: 100,),
+                                    )
+                                  ],
+                                ),
                               ),
-                              border: Border.all(color: Colors.white,width: 1.0),
-                              borderRadius:  BorderRadius.circular(15.0)
-                          ),
-                          padding: EdgeInsets.all(10.0),
-                          height: (MediaQuery.of(context).size.width),
-                          width: (MediaQuery.of(context).size.width)*0.8,
-                          child: Column(
-                            children: [
-                              Container(
-                                  padding: EdgeInsets.only(bottom:6.0),
-                                  child: Text("Ranking",style: TextStyle(color: Colors.white,fontSize: 20),)),
-                              Expanded(
-                                child: ListView.builder(
-                                  itemBuilder: (context, index) {
-                                    return ranking100(index);
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  iconSize: 40,
+                                  icon:Icon(
+                                      Icons.clear,
+                                      color: Colors.white
+                                  ),
+                                  onPressed: (){
+                                    soundManager.playLocal('cancel.mp3');
+                                    Navigator.push(
+                                      context,
+                                      SlidePageRoute(
+                                        page: TimeAttackTop(),
+                                        settings: RouteSettings(name: '/stage_builder',),
+                                      ),
+                                    );
                                   },
-                                  itemCount: 100,),
-                              )
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            iconSize: 40,
-                            icon:Icon(
-                                Icons.clear,
-                                color: Colors.white
-                            ),
-                            onPressed: (){
-                              soundManager.playLocal('cancel.mp3');
-                              Navigator.push(
-                                context,
-                                SlidePageRoute(
-                                  page: TimeAttackTop(),
-                                  settings: RouteSettings(name: '/stage_builder',),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
                     ],
+
                   ),
                 ),
-                AdMob.banner()
-              ],
-
+              ),
             ),
-          ),
+            AdMob.banner()
+          ],
         ),
       ),
     );

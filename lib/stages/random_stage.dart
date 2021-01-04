@@ -78,70 +78,75 @@ class _RandomStageState extends State<RandomStage> {
           )
       ),
       child: SafeArea(
-        child: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/wood.png"),
-                    fit: BoxFit.cover
-                )
-            ),
-            child: Column(
-              children: [
-                Expanded(
+        child: Column(
+          children: [
+            Expanded(
+              child: Scaffold(
+                body: Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/images/wood.png"),
+                          fit: BoxFit.cover
+                      )
+                  ),
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(top:20.0,bottom:25.0,left:20.0,right:20.0),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage("assets/images/btn03_01_light.png"),
-                                  //fit: BoxFit.cover
-                                )
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(top:20.0,bottom:25.0,left:20.0,right:20.0),
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage("assets/images/btn03_01_light.png"),
+                                        //fit: BoxFit.cover
+                                      )
+                                  ),
+                                  child: Center(child: Text("TIME ${s.elapsed.toString().substring(2, 7)}",style: TextStyle(fontSize:20,color: Colors.white))),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top:20.0,bottom:25.0,left:20.0,right:20.0),
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage("assets/images/btn03_01_light.png"),
+                                        // fit: BoxFit.cover
+                                      )
+                                  ),
+                                  child: Center(child: Text("STAGE "+stageCount.toString()+"／10",style: TextStyle(fontSize:20,color: Colors.white))),
+                                ),
+                              ],
                             ),
-                            child: Center(child: Text("TIME ${s.elapsed.toString().substring(2, 7)}",style: TextStyle(fontSize:20,color: Colors.white))),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(top:20.0,bottom:25.0,left:20.0,right:20.0),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage("assets/images/btn03_01_light.png"),
-                                  // fit: BoxFit.cover
-                                )
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: iconButtons()
                             ),
-                            child: Center(child: Text("STAGE "+stageCount.toString()+"／10",style: TextStyle(fontSize:20,color: Colors.white))),
-                          ),
-                        ],
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: iconButtons()
-                      ),
-                      Container(height: 30),
-                      Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Column(children: tiles(),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child:  Stack(children: robot()),
-                          ),
-                          Text('')
-                        ],
+                            Container(height: 30),
+                            Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Column(children: tiles(),),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child:  Stack(children: robot()),
+                                ),
+                                Text('')
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-               AdMob.banner()
-              ],
-
+              ),
             ),
-          ),
+            AdMob.banner()
+          ],
         ),
       ),
     );
