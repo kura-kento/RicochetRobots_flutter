@@ -20,6 +20,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-7136658286637435~2682053486</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.board-games</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -31,8 +33,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -44,8 +44,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
-    <true/>
-    <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-7136658286637435~2682053486</string>
+	<true/>
 </dict>
 </plist>
