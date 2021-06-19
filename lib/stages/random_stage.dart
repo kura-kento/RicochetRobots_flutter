@@ -494,8 +494,8 @@ class _RandomStageState extends State<RandomStage> {
   }
 
   void dataInstall(){
-    stageData = Stage(8,"stage3",[[2,0,3],[7,1,7],[7,4,7],[4,7,3],[1,7,3],[0,3,7]],[[7,0],[0,7]],false);
-    stageSize = stageData.size;
+    stageData = Stage(8,8,"stage3",[[2,0,3],[7,1,7],[7,4,7],[4,7,3],[1,7,3],[0,3,7]],[[7,0],[0,7]],false);
+    stageSize = stageData.row;
     robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
     robotsListMap();
     shuffle();
@@ -543,7 +543,7 @@ class _RandomStageState extends State<RandomStage> {
     setState(() {});
   }
   void initRobots(){
-    stageData = Stage(8,"stage3",[[2,0,3],[7,1,7],[7,4,7],[4,7,3],[1,7,3],[0,3,7]],[[7,0],[0,7]],false);
+    stageData = Stage(8,8,"stage3",[[2,0,3],[7,1,7],[7,4,7],[4,7,3],[1,7,3],[0,3,7]],[[7,0],[0,7]],false);
     robotsMap = List<Map<String,dynamic>>();
     robotList = stageData.robots.map((value) => [value[0],value[1]]).toList();
     robotsListMap();

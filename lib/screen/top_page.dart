@@ -131,7 +131,7 @@ class _TopPageState extends State<TopPage> {
                 )
               ),
             ),
-            AdMob.banner()
+         //   AdMob.banner()
           ],
         ),
       ),
