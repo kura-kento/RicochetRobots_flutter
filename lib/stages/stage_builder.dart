@@ -7,6 +7,7 @@ import 'package:ricochetrobotsapp/models/stage.dart';
 import 'package:ricochetrobotsapp/screen/stage_select.dart';
 import 'package:ricochetrobotsapp/screen/top_page.dart';
 import 'package:ricochetrobotsapp/utils/admob.dart';
+import 'package:ricochetrobotsapp/utils/app.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
 import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
@@ -74,60 +75,36 @@ class _StageBuilderState extends State<StageBuilder> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/wood.png"),
-              fit: BoxFit.cover
-          )
-      ),
+      color: Colors.black87,
       child: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: Scaffold(
                 body: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/wood.png"),
-                      fit: BoxFit.cover
-                    )
-                  ),
+                  color: App.background,
                   child: Column(
                     children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Center(
-                              child: Container(
-                                  padding: EdgeInsets.only(top:25.0,bottom:28.0,left:20.0,right:20.0),
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: AssetImage("assets/images/btn03_01_light.png"),
-                                      )
-                                  ),
-                                child: Text("STAGE${widget.id}",style: TextStyle(fontSize:20,color: Colors.white),))
+                      statusBar(),
+                      Container(height: 150,),
+                      Stack(
+                        children: [
+                          Container(
+                            color:Colors.red,
+                            child: Padding(
+                              padding: const EdgeInsets.all(0.0),
+                              child: Column(children: tiles(),),
                             ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: iconButtons()
+                          ),
+                          Container(
+                           // color:Colors.black,
+                            child: Padding(
+                              padding: const EdgeInsets.all(0.0),
+                              child: Center(child: Stack(children: robot())),
                             ),
-                            Padding(padding: EdgeInsets.only(bottom:10.0),),
-                            Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(3.0),
-                                  child: Column(children: tiles(),),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Stack(children: robot()),
-                                ),
-
-                                Text('')
-                              ],
-                            ),
-                          ],
-                        ),
+                          ),
+                          Text('')
+                        ],
                       ),
                     ],
                   ),
@@ -140,51 +117,83 @@ class _StageBuilderState extends State<StageBuilder> {
       ),
     );
   }
+
+  Widget statusBar(){
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFE4E3E3),
+        border: Border(
+          bottom: BorderSide(
+              color: Colors.black87,
+              width: 1.0
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Center(
+              child: Text(
+                "STAGE${widget.id}",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color(0xFF0CEFEF),
+                ),
+              ),
+            ),
+          ),
+          ...iconButtons()
+        ],
+      ),
+    );
+  }
+
+
   List<Widget> tiles() {
+    num squareSize = (MediaQuery.of(context).size.width - 8 - (App.borderWidth * stageRow)) / stageRow;
     List<Widget> _list = [];
     if(parameter!=null) {
       for (int i = 0; i < stageColumn; i++) {
-        List<Widget> a = [Container(height: 4.0, width: 4.0, color: Colors.white,)];
-        List<Widget> _listCache = [Container(height: (MediaQuery.of(context).size.width - 10 - (4 * stageRow)) / stageRow, width: 4.0, color: wallColors,)];
+        List<Widget> corner = [Container(height: App.borderHeight, width: App.borderWidth, color: App.background,)];
+        List<Widget> _listCache = [Container(height: squareSize, width: App.borderWidth, color: App.background,)];
         for (int j = 0; j < stageRow; j++) {
           _listCache.add(
-                Container(
-                      height: (MediaQuery.of(context).size.width - 10 - (4 * stageRow)) / stageRow,
-                      width: (MediaQuery.of(context).size.width - 10 - (4 * stageRow)) / stageRow,
-                      color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Color(0xfff07783): parameter[i][j] != null && parameter[i][j] % 210 == 0 ? wallColors: Colors.grey[300],
-//                      child: Text("${[i,j]}"),
-                      child: Text(""),
-                    ),
+            Container(
+              height: squareSize,
+              width: squareSize,
+              color: parameter[i][j] != null && parameter[i][j] % 11 == 0 ? Color(0xfff07783): parameter[i][j] != null && parameter[i][j] % 210 == 0 ? wallColors: Colors.grey[300],
+              child: Text(""),
+            ),
           );
           _listCache.add(
             Container(
-              height: (MediaQuery.of(context).size.width - 10 - (4 * stageRow)) / stageRow,
-              width: 4.0,
+              height: squareSize,
+              width: App.borderWidth,
               color: wallColor(i,j)
             )
           );
         }
         _list.add(Row(children: _listCache,));
         for (int j = 0; j < stageRow; j++) {
-          a.add(
+          corner.add(
             Container(
-              width: (MediaQuery.of(context).size.width - 10 - (4 * stageRow)) / stageRow,
-              height: 4.0,
+              width: squareSize,
+              height: App.borderHeight,
               color: wallColor2(i,j)
             )
           );
-          a.add(
+          corner.add(
             Container(
-              height: 4.0,
-              width: 4.0,
-              color: Colors.white,
+              height: App.borderHeight,
+              width: App.borderWidth,
+              color: App.background,
             )
           );
         }
         if(i == stageColumn-1) {
-          _list.insert(0, Row(children: a,));
+          _list.insert(0, Row(children: corner,));
         }
-        _list.add(Row(children: a,));
+        _list.add(Row(children: corner,));
       }
     }
     return _list;
@@ -192,6 +201,7 @@ class _StageBuilderState extends State<StageBuilder> {
   }
   Color wallColor(column,row){
     if(row == stageRow-1 ) {
+      return App.background;
       return wallColors;
     }
     if(parameter[column][row] == null ) {
@@ -205,10 +215,11 @@ class _StageBuilderState extends State<StageBuilder> {
         return wallColors;
       }
     }
-    return Colors.white;
+    return App.background;
   }
   Color wallColor2(column, row) {
     if(column == stageColumn-1 ) {
+      return App.background;
       return wallColors;
     }
     if(parameter[column][row] == null ) {
@@ -222,7 +233,7 @@ class _StageBuilderState extends State<StageBuilder> {
         return wallColors;
       }
     }
-    return Colors.white;
+    return App.background;
   }
 
   List<Widget>iconButtons() {
@@ -232,12 +243,8 @@ class _StageBuilderState extends State<StageBuilder> {
     for(int i = 0;i < _icons.length; i++) {
       _cache.add(
         Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/btn03_04_light.png"),
-                  fit: BoxFit.cover
-              )
-          ),
+          margin: EdgeInsets.only(left: 5.0),
+          color: Color(0xFFC4C4C4),
           child: IconButton(
             icon:Icon(
               _icons[i],
@@ -279,18 +286,20 @@ class _StageBuilderState extends State<StageBuilder> {
             }
           },
           child: Container(
-            height: (MediaQuery.of(context).size.width - 10),
-            width: (MediaQuery.of(context).size.width - 10),
+            height: (MediaQuery.of(context).size.width),
+            width: (MediaQuery.of(context).size.width),
             child: AnimatedAlign(
               alignment: robotsMap[mapIndex]["alignment"],
               duration: Duration(milliseconds: 500),
               child: Container(
-                margin: EdgeInsets.all(2.0+25.0/stageRow),
-                width: (MediaQuery.of(context).size.width-50-10-(4*stageRow)) / stageRow,
-                height: (MediaQuery.of(context).size.width-50-10-(4*stageRow)) / stageRow,
+                // color: Colors.red,
+                margin: EdgeInsets.all(App.borderWidth),
+                width: (MediaQuery.of(context).size.width - App.borderWidth - (App.borderWidth * stageRow)) / stageRow,
+                height: (MediaQuery.of(context).size.width - App.borderWidth - (App.borderWidth * stageRow)) / stageRow,
                 decoration: BoxDecoration(
                     color: robotsMap[mapIndex]["color"],
-                    borderRadius: BorderRadius.circular(100)),
+                    borderRadius: BorderRadius.circular(100),
+                ),
               ),
               curve: Curves.easeInOut,
             ),
