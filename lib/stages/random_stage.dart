@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/models/ranking.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
 import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
-import 'package:ricochetrobotsapp/screen/top_page.dart';
+import 'package:ricochetrobotsapp/screen/top-page.dart';
 import 'package:ricochetrobotsapp/stages/random_stage_size6.dart';
 import 'package:ricochetrobotsapp/utils/admob.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
