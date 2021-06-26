@@ -37,7 +37,7 @@ class _StageBuilderState extends State<StageBuilder> {
   List<List<int>> robotList;
   Stopwatch s = Stopwatch();
   List<Map<String,dynamic>> robotsMap = [];
-
+  int stageNumber = 1;
   DatabaseHelper databaseHelper = DatabaseHelper();
   Stage stageData;
   Color wallColors = Color(0xff888888);
@@ -45,6 +45,7 @@ class _StageBuilderState extends State<StageBuilder> {
   @override
   void initState() {
     dataInstall(widget.id);
+    stageNumber = widget.id;
     s.start();
     super.initState();
   }
@@ -383,62 +384,115 @@ class _StageBuilderState extends State<StageBuilder> {
       s.stop();
       unlock();
       //変更予定
-      SharedPrefs.setStage(widget.id+1);
-      showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+      SharedPrefs.setStage(stageNumber+1);
+      showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) -   1.0;
+          return Transform(
+            transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: AlertDialog(
+                shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.0)),
+                title: Text("CLEAR"),
+                content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
+                actions: [
+                          Container(
+                            color: App.panelColor,
+                            child: IconButton(
+                              icon: Icon(Icons.reply),
+                              iconSize: 25,
+                              color: Color(0xFF663300),
+                              onPressed: () {
+                                soundManager.playLocal('select.mp3');
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: App.panelColor
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.play_arrow),
+                              iconSize: 25,
+                              color: Color(0xFF663300),
+                              onPressed: (){
+                                soundManager.playLocal('select.mp3');
+                                Navigator.push(
+                                  context,
+                                  SlidePageRoute(
+                                    page: StageBuilder(id: stageNumber + 1),
+                                    settings: RouteSettings(name: '/stage_builder',),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                ],
+              ),
             ),
-              title: Text("CLEAR"),
-            content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
-            actions: <Widget>[
-              // ボタン領域
-              Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/btn03_04_light.png"),
-                      fit: BoxFit.cover
-                    ),
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.reply),
-                  iconSize: 25,
-                  color: Color(0xFF663300),
-                  onPressed: () {
-                    soundManager.playLocal('select.mp3');
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/btn03_04_light.png"),
-                      fit: BoxFit.cover
-                  ),
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.play_arrow),
-                  iconSize: 25,
-                  color: Color(0xFF663300),
-                  onPressed: (){
-                    soundManager.playLocal('select.mp3');
-                    Navigator.push(
-                      context,
-                      SlidePageRoute(
-                        page: StageBuilder(id: widget.id+1),
-                        settings: RouteSettings(name: '/stage_builder',),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
           );
         },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (BuildContext context, Animation animation,
+            Animation secondaryAnimation) {
+          return Container();
+        },
       );
+
+      // showDialog(
+      //   context: context,
+      //   builder: (_) {
+      //     return AlertDialog(
+      //       shape: RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.all(Radius.circular(16.0)),
+      //       ),
+      //       title: Text("CLEAR"),
+      //       content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
+      //       actions: <Widget>[
+      //         // ボタン領域
+      //         Container(
+      //           color: Color(0xFF663300),
+      //           child: IconButton(
+      //             icon: Icon(Icons.reply),
+      //             iconSize: 25,
+      //             color: Color(0xFF663300),
+      //             onPressed: () {
+      //               soundManager.playLocal('select.mp3');
+      //               Navigator.pop(context);
+      //             },
+      //           ),
+      //         ),
+      //         Container(
+      //           decoration: BoxDecoration(
+      //             color: App.panelColor
+      //           ),
+      //           child: IconButton(
+      //             icon: Icon(Icons.play_arrow),
+      //             iconSize: 25,
+      //             color: Color(0xFF663300),
+      //             onPressed: (){
+      //               soundManager.playLocal('select.mp3');
+      //               Navigator.push(
+      //                 context,
+      //                 SlidePageRoute(
+      //                   page: StageBuilder(id: widget.id+1),
+      //                   settings: RouteSettings(name: '/stage_builder',),
+      //                 ),
+      //               );
+      //             },
+      //           ),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     }
   }
 

@@ -94,7 +94,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
-  audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
+  audioplayers: 455322b54050b30ea4b1af7cd9e9d105f74efa8c
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_google_ad_manager: 6500e04ad927e5c4b8f5286a87aa138aac13feb4
   flutter_store_listing: 8a8514f63b41943433de5d684204ebf1edcbbfe4
