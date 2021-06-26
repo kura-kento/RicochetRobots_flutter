@@ -31,19 +31,19 @@ class _TopPageState extends State<TopPage> {
                     children: [
                       Align(
                         alignment: Alignment.topLeft,
-                        child: IconButton(icon: Icon(Icons.brightness_1, color: Colors.red, size: 18,), onPressed: (){}),
+                        child: IconButton(icon: Icon(Icons.brightness_1, color: App.redColor, size: 18,), onPressed: null),
                       ),
                       Align(
                         alignment: Alignment.topRight,
-                        child: IconButton(icon: Icon(Icons.brightness_1, color: Colors.blue, size: 18,), onPressed: (){}),
+                        child: IconButton(icon: Icon(Icons.brightness_1, color: App.blueColor, size: 18,), onPressed: null),
                       ),
                       Align(
                         alignment: Alignment.bottomLeft,
-                        child: IconButton(icon: Icon(Icons.brightness_1, color: Colors.yellow, size: 18,), onPressed: (){}),
+                        child: IconButton(icon: Icon(Icons.brightness_1, color: App.greenColor, size: 18,), onPressed: null),
                       ),
                       Align(
                         alignment: Alignment.bottomRight,
-                        child: IconButton(icon: Icon(Icons.brightness_1, color: Colors.green, size: 18,), onPressed: (){}),
+                        child: IconButton(icon: Icon(Icons.brightness_1, color: App.yellowColor, size: 18,), onPressed: null),
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -55,7 +55,7 @@ class _TopPageState extends State<TopPage> {
                             color: App.primaryColor,
                             child: Center(
                               child: Text(
-                                "STAGE" + SharedPrefs.getStage().toString(),
+                                "STAGE " + SharedPrefs.getStage().toString(),
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,

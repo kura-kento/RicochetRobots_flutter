@@ -4,6 +4,7 @@ import 'package:ricochetrobotsapp/models/stage.dart';
 import 'package:ricochetrobotsapp/screen/top-page.dart';
 import 'package:ricochetrobotsapp/stages/stage_builder.dart';
 import 'package:ricochetrobotsapp/utils/admob.dart';
+import 'package:ricochetrobotsapp/utils/app.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
@@ -30,61 +31,50 @@ void initState(){
   Widget build(BuildContext context) {
 
     return Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/wood.png"),
-                fit: BoxFit.cover
-            )
-        ),
+      color: Colors.black,
       child: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: Scaffold(
+                appBar: AppBar(
+                  title: Text("STAGE SELECT"),
+                ),
                 body: Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("assets/images/wood.png"),
-                          fit: BoxFit.cover
-                      )
-                  ),
+                  padding: EdgeInsets.only(top: 50),
+                  color: App.background,
                   child: Column(
                     children: [
                       Expanded(
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Container(
-                                    height: 60,
-                                    width: 60,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: AssetImage("assets/images/right_btn.png"),
-                                            fit: BoxFit.cover
-                                        )
-                                    ),
-                                    child: IconButton(
-                                      onPressed: (){
-                                        soundManager.playLocal('select.mp3');
-                                        Navigator.push(
-                                          context,
-                                          SlidePageRoute(
-                                            page: TopPage(),
-                                            settings: RouteSettings(name: '/stage_builder',),
-                                          ),
-                                        );
-                                      },
-                                      //""
-                                      icon: Icon(Icons.chevron_left,size: 45,color: Color(0xFF663300),),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.start,
+                            //   children: [
+                            //     Padding(
+                            //       padding: const EdgeInsets.all(10.0),
+                            //       child: Container(
+                            //         height: 60,
+                            //         width: 60,
+                            //         color: App.primaryColor,
+                            //         child: IconButton(
+                            //           onPressed: (){
+                            //             soundManager.playLocal('select.mp3');
+                            //             Navigator.push(
+                            //               context,
+                            //               SlidePageRoute(
+                            //                 page: TopPage(),
+                            //                 settings: RouteSettings(name: '/stage_builder',),
+                            //               ),
+                            //             );
+                            //           },
+                            //           //""
+                            //           icon: Icon(Icons.chevron_left,size: 45,color: Color(0xFF663300),),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                             Expanded(
                                 child: SingleChildScrollView(
                               child: Container(
@@ -118,12 +108,7 @@ void initState(){
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage("assets/images/btn03_04_light.png"),
-                              fit: BoxFit.cover
-                          )
-                      ),
+                      color: App.primaryColor,
                       height: (MediaQuery.of(context).size.width) / 5,
                       child: InkWell(
                         onTap: () {
@@ -138,7 +123,7 @@ void initState(){
                         },
                         child: Center(
                           child: Text(
-                              stageDataList != null ? "${stageDataList[stageNumber].id}" : "",style: TextStyle(fontSize: 30),),
+                              stageDataList != null ? "${stageDataList[stageNumber].id}" : "",style: TextStyle(fontSize: 20, color: Colors.white),),
                         ),
                       )
                   ),
@@ -152,12 +137,7 @@ void initState(){
                 child:  Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage("assets/images/btn03_04_light.png"),
-                            fit: BoxFit.cover
-                        )
-                    ),
+                    color: Color(0xffDBDADA),
                     height: (MediaQuery.of(context).size.width) / 5,
                     child: Icon(Icons.lock_outline,size: 30,),
                   ),

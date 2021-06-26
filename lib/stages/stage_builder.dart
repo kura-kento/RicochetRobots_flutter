@@ -81,16 +81,31 @@ class _StageBuilderState extends State<StageBuilder> {
           children: [
             Expanded(
               child: Scaffold(
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  title: Center(
+                    child: Text(
+                      "STAGE　${widget.id}",
+                      style: TextStyle(
+                        fontSize: 20,
+                        // color: App.primaryColor,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    ...iconButtons()
+                  ],
+                ),
                 body: Container(
                   color: App.background,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      statusBar(),
-                      Container(height: 150,),
                       Stack(
                         children: [
                           Container(
-                            color:Colors.red,
+                            // color:Colors.red,
                             child: Padding(
                               padding: const EdgeInsets.all(0.0),
                               child: Column(children: tiles(),),
@@ -117,37 +132,6 @@ class _StageBuilderState extends State<StageBuilder> {
       ),
     );
   }
-
-  Widget statusBar(){
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFFE4E3E3),
-        border: Border(
-          bottom: BorderSide(
-              color: Colors.black87,
-              width: 1.0
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Center(
-              child: Text(
-                "STAGE${widget.id}",
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Color(0xFF0CEFEF),
-                ),
-              ),
-            ),
-          ),
-          ...iconButtons()
-        ],
-      ),
-    );
-  }
-
 
   List<Widget> tiles() {
     num squareSize = (MediaQuery.of(context).size.width - 8 - (App.borderWidth * stageRow)) / stageRow;
@@ -244,7 +228,7 @@ class _StageBuilderState extends State<StageBuilder> {
       _cache.add(
         Container(
           margin: EdgeInsets.only(left: 5.0),
-          color: Color(0xFFC4C4C4),
+          color: App.buttonColor,
           child: IconButton(
             icon:Icon(
               _icons[i],

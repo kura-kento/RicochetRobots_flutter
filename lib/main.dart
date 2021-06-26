@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        primaryColor: Color(0xFFE5E5E5)
       ),
       home: FutureBuilder(
         builder: (BuildContext context ,AsyncSnapshot snapshot) {
