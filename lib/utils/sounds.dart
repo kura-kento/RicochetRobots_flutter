@@ -14,7 +14,7 @@ class SoundManager {
       await file.writeAsBytes(bytes, flush: true);
     }
     await audioPlayer.play(file.path, isLocal: true);
-    if(localFileName=='Blue_Moon_2.mp3') {
+    if(localFileName == 'Blue_Moon_2.mp3') {
       await audioPlayer.setReleaseMode(ReleaseMode.LOOP);
     }
   }

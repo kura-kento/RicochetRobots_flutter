@@ -48,10 +48,18 @@ class DatabaseHelper {
     await db.execute('CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colRow INTEGER, $colColumn INTEGER,'
         '$colName TEXT, $colParameter TEXT, $colRobots TEXT, $colLock TEXT)');
     await db.insert(tableName,Stage(5,1,"stage1lv1",[[0,4,11]],[[0,1]],false).toMap());
-    await db.insert(tableName,Stage(5,5,"stage1lv1",[[1,4,11],[1,3,7],[0,4,3],[0,3,3]],[[1,1]],false).toMap());
+    await db.insert(tableName,Stage(5,3,"stage1lv1",[[1,4,11],[1,3,7],[0,4,3],[0,3,3]],[[1,1]],true).toMap());
     await db.insert(tableName,Stage(5,5,"stage1lv1",[[2,2,210],[3,3,231],[1,3,14]],[[1,1]],true).toMap());
+    await db.insert(tableName,Stage(5,3,"stage1lv1",[[0,4,11],[0,0,7],[2,2,7],[0,3,7]],[[0,0]],true).toMap());
+    await db.insert(tableName,Stage(5,1,"stage1lv1",[[0,3,11]],[[0,0],[0,3]],true).toMap());
+
+    await db.insert(tableName,Stage(5,2,"stage1lv1",[[0,3,33],[0,1,3],[0,2,3]],[[0,0],[1,4]],true).toMap());
+    await db.insert(tableName,Stage(5,2,"stage1lv1",[[0,2,33],[0,1,3],[0,3,3]],[[0,0],[1,4]],true).toMap());
+
+    await db.insert(tableName,Stage(4,3,"stage2lv5",[[1,1,11],[2,0,7]],[[0,0],[1,0]],true).toMap());
+
     await db.insert(tableName,Stage(5,5,"stage2lv5",[[2,2,210],[3,3,231]],[[4,0],[4,1]],true).toMap());
-    await db.insert(tableName,Stage(5,5,"stage2lv10",[[2,2,210],[4,0,2],[3,3,231],[4,1,7],[1,1,10]],[[1,4],[4,0]],true).toMap());
+    await db.insert(tableName,Stage(5,5,"stage2lv10",[[2,2,210],[4,0,2],[3,3,231],[4,1,7],[1,1,10],[0,4,5]],[[1,4],[4,0]],true).toMap());
     await db.insert(tableName,Stage(7,7,"stage3lv20",[[1,5,770],[0,2,7],[2,2,21],[2,0,3],[0,4,5],[2,4,15],[2,6,3],[4,4,10],[6,4,5],[4,6,2],[4,0,2],[4,2,14],[6,2,7]],[[1,1],[5,1],[5,5]],true).toMap());
     //5
     await db.insert(tableName,Stage(6,6,"stage3lv20",[[2,3,462],[0,5,210],[5,0,210],[4,4,3],[4,1,15],[1,1,10]],[[4,0],[5,5]],true).toMap());

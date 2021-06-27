@@ -1,7 +1,8 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/screen/stage_select.dart';
-import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
 import 'package:ricochetrobotsapp/stages/stage_builder.dart';
+import 'package:ricochetrobotsapp/utils/admob_service.dart';
 import 'package:ricochetrobotsapp/utils/app.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
 import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
@@ -15,6 +16,16 @@ class TopPage extends StatefulWidget {
 
 class _TopPageState extends State<TopPage> {
   final SoundManager soundManagerSelect = SoundManager();
+
+  Future<void> tracking() async {
+    await Admob.requestTrackingAuthorization();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    tracking();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +124,7 @@ class _TopPageState extends State<TopPage> {
                 )
               ),
             ),
-         //   AdMob.banner()
+            AdMobService().admobBanner()
           ],
         ),
       ),

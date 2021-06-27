@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:ricochetrobotsapp/screen/top-page.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
@@ -41,6 +42,8 @@ class MyApp extends StatelessWidget {
     bgmManager.playLocal('Blue_Moon_2.mp3');
     DatabaseHelper.db = await DatabaseHelper.initializeDatabase();
     DatabaseHelperRanking.db = await DatabaseHelperRanking.initializeDatabase();
+    WidgetsFlutterBinding.ensureInitialized();
+    Admob.initialize();
     return TopPage();
   }
 }

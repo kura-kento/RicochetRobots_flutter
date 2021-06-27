@@ -4,6 +4,7 @@ import 'package:ricochetrobotsapp/screen/rabking_page.dart';
 import 'package:ricochetrobotsapp/screen/top-page.dart';
 import 'package:ricochetrobotsapp/stages/random_stage.dart';
 import 'package:ricochetrobotsapp/utils/admob.dart';
+import 'package:ricochetrobotsapp/utils/admob_service.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
 import 'package:ricochetrobotsapp/utils/shared_prefs.dart';
 import 'package:ricochetrobotsapp/utils/sounds.dart';
@@ -193,7 +194,7 @@ class _TimeAttackTopState extends State<TimeAttackTop> {
                 ),
               ),
             ),
-            AdMob.banner()
+            AdMobService().admobBanner()
           ],
         ),
       ),

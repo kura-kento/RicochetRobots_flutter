@@ -8,6 +8,7 @@ import 'package:ricochetrobotsapp/screen/time_attack_top.dart';
 import 'package:ricochetrobotsapp/screen/top-page.dart';
 import 'package:ricochetrobotsapp/stages/random_stage_size6.dart';
 import 'package:ricochetrobotsapp/utils/admob.dart';
+import 'package:ricochetrobotsapp/utils/admob_service.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
 import 'package:ricochetrobotsapp/utils/database_help_ranking.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
@@ -145,7 +146,7 @@ class _RandomStageState extends State<RandomStage> {
                 ),
               ),
             ),
-            AdMob.banner()
+            AdMobService().admobBanner(),
           ],
         ),
       ),

@@ -6,7 +6,7 @@ import 'package:flutter_store_listing/flutter_store_listing.dart';
 import 'package:ricochetrobotsapp/models/stage.dart';
 import 'package:ricochetrobotsapp/screen/stage_select.dart';
 import 'package:ricochetrobotsapp/screen/top-page.dart';
-import 'package:ricochetrobotsapp/utils/admob.dart';
+import 'package:ricochetrobotsapp/utils/admob_service.dart';
 import 'package:ricochetrobotsapp/utils/app.dart';
 import 'package:ricochetrobotsapp/utils/database_help.dart';
 import 'package:ricochetrobotsapp/utils/page_animation.dart';
@@ -127,7 +127,7 @@ class _StageBuilderState extends State<StageBuilder> {
                 ),
               ),
             ),
-            // AdMob.banner()
+            AdMobService().admobBanner(),
           ],
         ),
       ),
@@ -327,7 +327,7 @@ class _StageBuilderState extends State<StageBuilder> {
       }else if(parameter[after[0]][after[1]] % 3 == 0) {
         break;
       }
-      if(after[0] == stageRow-1)break;
+      if(after[0] == stageColumn-1)break;
       after[0]+= 1;
     }
   }
@@ -399,38 +399,38 @@ class _StageBuilderState extends State<StageBuilder> {
                 title: Text("CLEAR"),
                 content: Text("TIME ${s.elapsed.toString().substring(2, 11)}"),
                 actions: [
-                          Container(
-                            color: App.panelColor,
-                            child: IconButton(
-                              icon: Icon(Icons.reply),
-                              iconSize: 25,
-                              color: Color(0xFF663300),
-                              onPressed: () {
-                                soundManager.playLocal('select.mp3');
-                                Navigator.pop(context);
-                              },
-                            ),
+                  Container(
+                    color: App.panelColor,
+                    child: IconButton(
+                      icon: Icon(Icons.reply),
+                      iconSize: 25,
+                      color: Color(0xFF663300),
+                      onPressed: () {
+                        soundManager.playLocal('select.mp3');
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: App.panelColor
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.play_arrow),
+                      iconSize: 25,
+                      color: Color(0xFF663300),
+                      onPressed: (){
+                        soundManager.playLocal('select.mp3');
+                        Navigator.push(
+                          context,
+                          SlidePageRoute(
+                            page: StageBuilder(id: stageNumber + 1),
+                            settings: RouteSettings(name: '/stage_builder',),
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: App.panelColor
-                            ),
-                            child: IconButton(
-                              icon: Icon(Icons.play_arrow),
-                              iconSize: 25,
-                              color: Color(0xFF663300),
-                              onPressed: (){
-                                soundManager.playLocal('select.mp3');
-                                Navigator.push(
-                                  context,
-                                  SlidePageRoute(
-                                    page: StageBuilder(id: stageNumber + 1),
-                                    settings: RouteSettings(name: '/stage_builder',),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
